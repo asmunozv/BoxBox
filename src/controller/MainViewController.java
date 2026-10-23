@@ -11,6 +11,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 import view.SeasonContext;
 
 public class MainViewController extends BorderPane {
@@ -29,14 +33,14 @@ public class MainViewController extends BorderPane {
     @FXML
     private Label userLabel;
 
-    @FXML
-    private Button importButton;
+    private HistoricalExplorerController explorer;
+    @FXML private VBox analysisNavigation,legacyNavigation;
+    @FXML private StackPane contentHost;
 
     @FXML
     private Button logoutButton;
 
-    @FXML
-    private TabPane tabPane;
+    private final TabPane tabPane = new TabPane();
 
     public MainViewController(Runnable onLogout) {
         this.dataImportController = new DataImportController();
@@ -63,11 +67,9 @@ public class MainViewController extends BorderPane {
     @FXML
     private void initialize() {
         getStyleClass().add("main-view");
-        setPadding(new Insets(10));
-        seasonLabel.setText("Season: " + ACTIVE_SEASON);
+        seasonLabel.setText("MySQL local · boxbox_db");
         String username = UserSession.getCurrentUsername();
         userLabel.setText("User: " + (username == null ? "-" : username));
-        importButton.setOnAction(event -> importApiData());
         logoutButton.setOnAction(event -> {
             UserSession.logout();
             if (onLogout != null) {
@@ -82,6 +84,16 @@ public class MainViewController extends BorderPane {
         tabPane.getTabs().add(createTab("Bingo", bingoView));
         Tab miniGameTab = createTab("Mini Game", miniGameView);
         tabPane.getTabs().add(miniGameTab);
+        tabPane.getStyleClass().add("legacy-tabs");
+        explorer = new HistoricalExplorerController();
+        Button explore = nav("Explorador histórico", () -> showContent(explorer));
+        analysisNavigation.getChildren().add(explore);
+        String[] titles={"Pilotos","Escuderías","Mapa y circuitos","Gestión de resultados","Bingo","Arcade"};
+        for(int i=0;i<titles.length;i++){
+            final int index=i;
+            legacyNavigation.getChildren().add(nav(titles[i],()->{showContent(tabPane);tabPane.getSelectionModel().select(index);if(index==5)miniGameView.onTabSelected();}));
+        }
+        showContent(explorer);
 
         miniGameTab.selectedProperty().addListener((obs, oldValue, selected) -> {
             if (selected) {
@@ -94,6 +106,9 @@ public class MainViewController extends BorderPane {
         raceView.setSeason(ACTIVE_SEASON);
         resultView.setSeason(ACTIVE_SEASON);
     }
+
+    private Button nav(String text,Runnable action){Button button=new Button(text);button.getStyleClass().add("nav-item");button.setMaxWidth(Double.MAX_VALUE);button.setOnAction(e->{for(var node:analysisNavigation.getChildren())node.getStyleClass().remove("nav-active");for(var node:legacyNavigation.getChildren())node.getStyleClass().remove("nav-active");button.getStyleClass().add("nav-active");action.run();});return button;}
+    private void showContent(javafx.scene.Node content){miniGameView.onTabUnselected();contentHost.getChildren().setAll(content);FadeTransition fade=new FadeTransition(Duration.millis(160),content);fade.setFromValue(0.6);fade.setToValue(1);fade.play();}
 
     private void importApiData() {
         try {

@@ -14,8 +14,8 @@
     <center>
         <StackPane fx:id="centerLayer" alignment="CENTER" BorderPane.alignment="CENTER">
             <VBox fx:id="loginCard" alignment="CENTER_LEFT" spacing="12" maxWidth="420" styleClass="login-card">
-                <Label text="F1 Control Center" styleClass="login-title" />
-                <Label text="Sign in to manage championship data" styleClass="login-subtitle" />
+                <Label text="BOXBOX" styleClass="login-title" />
+                <Label text="Entiende la carrera. Explora la estrategia." styleClass="login-subtitle" />
                 <TextField fx:id="usernameField" promptText="Username" />
                 <PasswordField fx:id="passwordField" promptText="Password" />
                 <Button fx:id="loginButton" text="Login" styleClass="danger-button" />

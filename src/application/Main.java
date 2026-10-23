@@ -20,7 +20,9 @@ public class Main extends Application {
             showLogin();
 
             primaryStage.setScene(scene);
-            primaryStage.setTitle("F1 Championship Management System");
+            primaryStage.setTitle("BoxBox · Racing understood");
+            primaryStage.setMinWidth(1000);
+            primaryStage.setMinHeight(650);
             primaryStage.show();
         } catch (Exception exception) {
             exception.printStackTrace();

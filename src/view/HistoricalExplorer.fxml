@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1" styleClass="explorer-view">
+  <top>
+    <VBox spacing="12">
+      <Label text="RACE EXPLORER" styleClass="eyebrow"/>
+      <Label fx:id="titleLabel" text="La historia detrás de cada vuelta" styleClass="hero-title"/>
+      <Label fx:id="circuitLabel" text="Explora datos históricos preparados y aprende a leer una carrera." wrapText="true" styleClass="muted"/>
+      <FlowPane hgap="10" vgap="8">
+        <ComboBox fx:id="seasonCombo" prefWidth="100" accessibleText="Temporada"/>
+        <ComboBox fx:id="raceCombo" prefWidth="310" promptText="Gran Premio" accessibleText="Gran Premio"/>
+        <Button fx:id="seasonImportButton" text="Preparar temporada" styleClass="secondary-button"/>
+        <Button fx:id="raceImportButton" text="Preparar vueltas y estrategia" styleClass="danger-button"/>
+        <ProgressIndicator fx:id="loading" prefWidth="24" prefHeight="24"/>
+      </FlowPane>
+      <Label fx:id="statusLabel" wrapText="true" styleClass="status-message"/>
+    </VBox>
+  </top>
+  <center>
+    <TabPane fx:id="analysisTabs" tabClosingPolicy="UNAVAILABLE" styleClass="analysis-tabs">
+      <Tab text="Resumen">
+        <BorderPane>
+          <top><VBox spacing="12">
+            <FlowPane hgap="12" vgap="10">
+              <VBox styleClass="stat-card" prefWidth="230"><Label text="GANADOR OBSERVADO" styleClass="stat-caption"/><Label fx:id="winnerValue" text="—" styleClass="stat-name"/></VBox>
+              <VBox styleClass="stat-card" prefWidth="130"><Label text="PILOTOS" styleClass="stat-caption"/><Label fx:id="entriesValue" text="—" styleClass="stat-value"/></VBox>
+              <VBox styleClass="stat-card" prefWidth="130"><Label text="VUELTAS" styleClass="stat-caption"/><Label fx:id="lapsValue" text="—" styleClass="stat-value"/></VBox>
+              <VBox styleClass="stat-card" prefWidth="160"><Label text="CON CLASIFICACIÓN" styleClass="stat-caption"/><Label fx:id="qualifyingValue" text="—" styleClass="stat-value"/></VBox>
+            </FlowPane>
+            <Label fx:id="coverageLabel" text="Archivo local sin preparar" wrapText="true" styleClass="coverage-label"/>
+            <FlowPane hgap="8" vgap="8">
+              <ComboBox fx:id="sessionFilter" prefWidth="110"/>
+              <ComboBox fx:id="driverFilter" prefWidth="190"/>
+              <ComboBox fx:id="teamFilter" prefWidth="190"/>
+              <TextField fx:id="searchField" promptText="Buscar piloto, equipo, código o estado…" prefWidth="270"/>
+            </FlowPane>
+          </VBox></top>
+          <center><TableView fx:id="resultsTable"/></center>
+          <bottom><Label fx:id="summaryLabel" wrapText="true" styleClass="explanation-card"/></bottom>
+          <padding><Insets top="14"/></padding>
+        </BorderPane>
+      </Tab>
+      <Tab text="Fuentes y cobertura"><VBox spacing="12"><Label text="Evidencia de cada instantánea" styleClass="section-title"/><Label text="Las instantáneas son inmutables. Preparar añade datos faltantes; no reemplaza registros existentes. Las consultas de esta pantalla se resuelven desde MySQL." wrapText="true" styleClass="muted"/><ListView fx:id="sourcesList" VBox.vgrow="ALWAYS"/></VBox></Tab>
+    </TabPane>
+  </center>
+  <padding><Insets top="20" right="24" bottom="18" left="24"/></padding>
+</fx:root>

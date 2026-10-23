@@ -1,8 +1,8 @@
 .root {
     -fx-font-family: "Segoe UI", "Calibri", sans-serif;
     -fx-font-size: 13px;
-    -fx-base: #131313;
-    -fx-background: #131313;
+    -fx-base: #111827;
+    -fx-background: #0a0f19;
 }
 
 .main-view {
@@ -196,3 +196,44 @@
 .vbox {
     -fx-spacing: 10px;
 }
+
+/* BoxBox-owned interface: local system typography, no external imagery or fonts. */
+.main-view, .explorer-view { -fx-background-color: #0a0f19; }
+.sidebar { -fx-background-color: #0e1522; -fx-border-color: transparent #202c40 transparent transparent; }
+.brand { -fx-font-size: 29px; -fx-font-weight: 900; -fx-text-fill: #ff4455; }
+.brand-caption { -fx-font-size: 10px; -fx-text-fill: #9cacc6; }
+.nav-section, .eyebrow { -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9aaeca; -fx-padding: 8 0 6 0; }
+.nav-item { -fx-alignment: CENTER_LEFT; -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 11 12; -fx-font-weight: normal; }
+.nav-item:hover { -fx-background-color: #1b273b; }
+.nav-active { -fx-background-color: #402031; -fx-text-fill: #ff8791; -fx-border-color: transparent transparent transparent #ff4455; -fx-border-width: 0 0 0 3; }
+.hero-title { -fx-font-size: 27px; -fx-font-weight: bold; -fx-text-fill: #f4f7ff; }
+.muted { -fx-text-fill: #a9b9d1; }
+.connection-badge { -fx-text-fill: #8ad8b2; -fx-font-size: 10px; }
+.status-message { -fx-text-fill: #a9b9d1; -fx-font-size: 12px; -fx-padding: 0 0 6 0; }
+.stat-card { -fx-background-color: #131d2e; -fx-border-color: #26344c; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 15; -fx-spacing: 7; }
+.stat-caption { -fx-text-fill: #9aafcc; -fx-font-size: 10px; -fx-font-weight: bold; }
+.stat-value { -fx-text-fill: #ffffff; -fx-font-size: 25px; -fx-font-weight: bold; }
+.stat-name { -fx-text-fill: #ffffff; -fx-font-size: 17px; -fx-font-weight: bold; }
+.coverage-label { -fx-text-fill: #91c9d9; -fx-font-size: 11px; -fx-padding: 5 0; }
+.explanation-card { -fx-background-color: #142338; -fx-background-radius: 8; -fx-padding: 13; -fx-text-fill: #c4d8ef; }
+.legacy-tabs > .tab-header-area { -fx-pref-height: 0; -fx-min-height: 0; -fx-max-height: 0; -fx-padding: 0; }
+.analysis-tabs > .tab-header-area .tab-header-background { -fx-background-color: #0a0f19; }
+.analysis-tabs .tab { -fx-background-color: #151f30; -fx-background-radius: 6 6 0 0; }
+.analysis-tabs .tab:selected { -fx-background-color: #8f253b; }
+.table-view { -fx-background-color: #101827; -fx-border-color: #283650; }
+.table-row-cell { -fx-background-color: #101827; -fx-cell-size: 35px; }
+.table-row-cell:filled:odd { -fx-background-color: #141e30; }
+.table-row-cell:filled:selected { -fx-background-color: #513048; }
+.table-view .column-header-background { -fx-background-color: #1c2b43; }
+.table-cell { -fx-border-color: transparent; -fx-text-fill: #e1e9f6; }
+.text-field, .combo-box-base, .spinner { -fx-background-color: #152238; -fx-border-color: #344663; }
+.list-view, .list-cell { -fx-background-color: #101827; -fx-text-fill: #dce8f9; }
+.list-cell:filled:selected { -fx-background-color: #3f2a42; }
+.chart { -fx-padding: 12; -fx-background-color: #101827; }
+.chart-plot-background { -fx-background-color: #101827; }
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines { -fx-stroke: #25324a; }
+.chart-series-line { -fx-stroke-width: 2.2; }
+.chart-legend { -fx-background-color: transparent; }
+.axis { -fx-tick-label-fill: #b6c9e3; }
+.axis-label, .chart-title { -fx-text-fill: #dce8f9; }
+.scroll-pane, .scroll-pane > .viewport { -fx-background-color: #0a0f19; }
