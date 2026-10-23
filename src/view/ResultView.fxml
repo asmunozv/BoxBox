@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <VBox spacing="10">
+            <Label text="Results Management" styleClass="section-title" />
+
+            <TableView fx:id="resultTable" prefHeight="320.0" />
+
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="80" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                    <ColumnConstraints minWidth="95" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                </columnConstraints>
+
+                <Label text="Driver:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <ComboBox fx:id="driverComboBox" promptText="Select driver" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Constructor:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <ComboBox fx:id="constructorComboBox" promptText="Select constructor" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                <Label text="Race:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <ComboBox fx:id="raceComboBox" promptText="Select race" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Session:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <ComboBox fx:id="sessionTypeComboBox" promptText="Session" onAction="#onSessionTypeChanged" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                <Label text="Position:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Spinner fx:id="positionSpinner" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            </GridPane>
+
+            <HBox spacing="8">
+                <Button text="Create" onAction="#onCreateResult" />
+                <Button text="Update" onAction="#onUpdateResult" />
+                <Button text="Delete" onAction="#onDeleteResult" />
+                <Button text="Refresh" onAction="#onRefreshData" />
+                <Button text="Drivers Championship" onAction="#onShowDriverStandings" />
+                <Button text="Constructors Championship" onAction="#onShowConstructorStandings" />
+            </HBox>
+
+            <padding>
+                <Insets />
+            </padding>
+        </VBox>
+    </center>
+</fx:root>

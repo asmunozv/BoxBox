@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="rootContainer" spacing="16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RaceDetailsViewController">
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16" />
+    </padding>
+    <ImageView fx:id="avatarImage" fitWidth="140" fitHeight="140" preserveRatio="true" />
+    <VBox spacing="8">
+        <Label fx:id="raceLabel" />
+        <Label fx:id="seasonLabel" />
+        <Label fx:id="roundLabel" />
+        <Label fx:id="dateLabel" />
+        <Label fx:id="circuitIdLabel" />
+        <Label fx:id="raceIdLabel" />
+        <Label fx:id="entriesLabel" />
+        <Label fx:id="winnersLabel" />
+    </VBox>
+</HBox>

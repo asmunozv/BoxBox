@@ -1,0 +1,198 @@
+.root {
+    -fx-font-family: "Segoe UI", "Calibri", sans-serif;
+    -fx-font-size: 13px;
+    -fx-base: #131313;
+    -fx-background: #131313;
+}
+
+.main-view {
+    -fx-background-color: linear-gradient(to bottom right, #070707, #141414 50%, #1a0c0c);
+}
+
+.login-view {
+    -fx-background-color: radial-gradient(center 20% 10%, radius 120%, #330808, #0a0a0a 55%, #000000);
+}
+
+.login-card {
+    -fx-background-color: rgba(16, 16, 16, 0.92);
+    -fx-border-color: #d30d0d;
+    -fx-border-width: 1.2;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-padding: 26px;
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #ffffff;
+}
+
+.login-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #d7d7d7;
+}
+
+.login-status {
+    -fx-text-fill: #ff7070;
+    -fx-font-size: 12px;
+}
+
+.app-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #ffffff;
+}
+
+.app-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #d1d1d1;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #ffffff;
+}
+
+.tab-pane {
+    -fx-tab-min-height: 34px;
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #121212;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #1f1f1f;
+    -fx-padding: 6 16 6 16;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #b80f0f;
+}
+
+.tab-pane .tab-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #f3f3f3;
+}
+
+.border-pane {
+    -fx-padding: 14px;
+}
+
+.label {
+    -fx-text-fill: #f0f0f0;
+}
+
+.table-view {
+    -fx-background-color: #101010;
+    -fx-border-color: #343434;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #1b1b1b;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-size: 34px;
+    -fx-border-color: transparent transparent #343434 transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #f2f2f2;
+}
+
+.table-row-cell {
+    -fx-cell-size: 32px;
+    -fx-background-color: #111111;
+    -fx-text-fill: #e4e4e4;
+}
+
+.table-row-cell:filled:odd {
+    -fx-background-color: #0d0d0d;
+}
+
+.table-cell {
+    -fx-text-fill: #e8e8e8;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #b80f0f;
+}
+
+.text-field,
+.combo-box,
+.date-picker,
+.spinner {
+    -fx-pref-height: 34px;
+}
+
+.text-field,
+.combo-box-base,
+.date-picker,
+.spinner {
+    -fx-background-color: #1b1b1b;
+    -fx-text-fill: #f2f2f2;
+    -fx-border-color: #494949;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.combo-box .list-cell,
+.date-picker .text-field,
+.text-field {
+    -fx-text-fill: #f2f2f2;
+}
+
+.button {
+    -fx-background-color: #222222;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 700;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-border-color: #3a3a3a;
+    -fx-border-radius: 6px;
+}
+
+.button:hover {
+    -fx-background-color: #2d2d2d;
+}
+
+.button:pressed {
+    -fx-background-color: #181818;
+}
+
+.danger-button {
+    -fx-background-color: linear-gradient(to right, #940000, #df1111);
+    -fx-border-color: #ff5050;
+}
+
+.danger-button:hover {
+    -fx-background-color: linear-gradient(to right, #aa0000, #f01818);
+}
+
+.danger-button:pressed {
+    -fx-background-color: linear-gradient(to right, #7e0000, #ba0909);
+}
+
+.grid-pane {
+    -fx-padding: 12px;
+    -fx-background-color: rgba(15, 15, 15, 0.92);
+    -fx-border-color: #2c2c2c;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.hbox,
+.vbox {
+    -fx-spacing: 10px;
+}

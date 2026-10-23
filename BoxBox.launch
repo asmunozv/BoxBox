@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/BoxBox/src/application/Main.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="application.Main"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="boxbox"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="BoxBox"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-26"/>
+    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:BoxBox}"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--enable-native-access=javafx.graphics,javafx.media"/>
+</launchConfiguration>

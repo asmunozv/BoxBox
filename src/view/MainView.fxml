@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="8" />
+            </padding>
+            <VBox spacing="4">
+                <Label text="F1 Championship Management System" styleClass="app-title" />
+                <Label text="Manage drivers, constructors, races/circuits, results, and play mini game" styleClass="app-subtitle" />
+            </VBox>
+            <HBox HBox.hgrow="ALWAYS" />
+            <Label fx:id="userLabel" />
+            <Label fx:id="seasonLabel" />
+            <Button fx:id="importButton" text="Import API Data" styleClass="danger-button" />
+            <Button fx:id="logoutButton" text="Logout" />
+        </HBox>
+    </top>
+    <center>
+        <TabPane fx:id="tabPane" />
+    </center>
+</fx:root>

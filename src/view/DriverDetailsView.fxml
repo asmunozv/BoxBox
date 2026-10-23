@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DriverDetailsViewController">
+    <content>
+        <HBox fx:id="rootContainer" spacing="16">
+            <padding>
+                <Insets top="16" right="16" bottom="16" left="16" />
+            </padding>
+            <ImageView fx:id="avatarImage" fitWidth="160" fitHeight="160" preserveRatio="true" />
+            <VBox spacing="8">
+                <Label fx:id="nameLabel" />
+                <Label fx:id="codeLabel" />
+                <Label fx:id="numberLabel" />
+                <Label fx:id="nationalityLabel" />
+                <Label fx:id="dobLabel" />
+                <Label fx:id="ergastIdLabel" />
+                <Label fx:id="audioPathLabel" />
+                <Label fx:id="teamLabel" />
+                <Label fx:id="debutLabel" />
+                <Label fx:id="quoteLabel" wrapText="true" />
+                <Label fx:id="seasonLabel" />
+                <Label fx:id="pointsLabel" />
+                <Label fx:id="racesLabel" />
+                <Label fx:id="winsLabel" />
+                <Label fx:id="podiumsLabel" />
+            </VBox>
+        </HBox>
+    </content>
+</ScrollPane>

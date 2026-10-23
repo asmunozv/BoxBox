@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <StackPane fx:id="centerLayer" alignment="CENTER" BorderPane.alignment="CENTER">
+            <VBox fx:id="loginCard" alignment="CENTER_LEFT" spacing="12" maxWidth="420" styleClass="login-card">
+                <Label text="F1 Control Center" styleClass="login-title" />
+                <Label text="Sign in to manage championship data" styleClass="login-subtitle" />
+                <TextField fx:id="usernameField" promptText="Username" />
+                <PasswordField fx:id="passwordField" promptText="Password" />
+                <Button fx:id="loginButton" text="Login" styleClass="danger-button" />
+                <Button fx:id="registerButton" text="Create Account" />
+                <Label fx:id="statusLabel" styleClass="login-status" />
+            </VBox>
+            <padding>
+                <Insets />
+            </padding>
+        </StackPane>
+    </center>
+</fx:root>

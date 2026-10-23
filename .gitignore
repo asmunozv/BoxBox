@@ -1,0 +1,14 @@
+# Credenciales, respaldos y evidencias privadas de la independencia de MySQL.
+/private/
+/.env
+/.env.*
+!/.env.example
+
+# Salidas generadas de Eclipse y herramientas locales.
+/bin/
+/build/
+*.log
+
+# SDK local y biblioteca heredada sin uso: se conservan en disco, no en el historial.
+/lib/javafx-sdk-*/
+/lib/ConexionDB.jar
