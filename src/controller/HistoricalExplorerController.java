@@ -34,6 +34,7 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
     @FXML TableView<Entry> resultsTable;
     @FXML ListView<String> sourcesList;
     @FXML TabPane analysisTabs;
+    @FXML DriverMediaCard driverMedia;
 
     public HistoricalExplorerController(){
         FXMLLoader loader=new FXMLLoader(getClass().getResource("/view/HistoricalExplorer.fxml"));loader.setRoot(this);loader.setController(this);
@@ -56,6 +57,7 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         resultsTable.setPlaceholder(new Label("Sin resultados locales para esta selección. Prepara la carrera para comenzar."));
         resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         resultsTable.getSelectionModel().selectedItemProperty().addListener((o,a,b)->showPoints(b));
+        analysisTabs.getSelectionModel().selectedIndexProperty().addListener((o,a,b)->{if(b.intValue()!=0)driverMedia.dispose();});
         for(ComboBox<?> box:List.of(driverFilter,teamFilter,sessionFilter))box.setOnAction(e->filter());
         searchField.textProperty().addListener((o,a,b)->filter());
         seasonCombo.setOnAction(e->{if(!selecting)selectSeason();});raceCombo.setOnAction(e->{if(!busy.get()&&!selecting)loadRace();});
@@ -92,7 +94,7 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         if(rows.isEmpty())showPoints(null);
         summaryLabel.setText(rows.size()+" resultados en esta selección. Parrilla y clasificación cronometrada son diferentes: las sanciones pueden cambiar la salida. Puntos conservados de la fuente; los abandonos mantienen su estado.");
     }
-    private void showPoints(Entry entry){pointsLabel.setText(data==null||entry==null?"Selecciona una fila para entender el desglose de puntos.":scoring.explain(data.race(),entry).explanation());}
+    private void showPoints(Entry entry){driverMedia.setEntry(entry);pointsLabel.setText(data==null||entry==null?"Selecciona una fila para entender el desglose de puntos.":scoring.explain(data.race(),entry).explanation());}
     protected void onRaceChanged(){}
     public void openTab(int index){analysisTabs.getSelectionModel().select(index);}
     public void prepareSeason(){Integer year=seasonCombo.getValue();if(year==null)return;importJob("Preparando temporada…",p->importer.season(year,p));}
@@ -115,5 +117,6 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
     }
     @FunctionalInterface interface Work<T>{T run()throws Exception;}
     private String safe(Throwable e){if(e instanceof java.sql.SQLException)return "verifica la conexión y la preparación del esquema de BoxBox.";return Timing.or(e.getMessage(),e.getClass().getSimpleName());}
-    @Override public void dispose(){if(activeTask!=null&&activeTask.isRunning())activeTask.cancel(true);}
+    public void stopAudio(){driverMedia.dispose();}
+    @Override public void dispose(){stopAudio();if(activeTask!=null&&activeTask.isRunning())activeTask.cancel(true);}
 }

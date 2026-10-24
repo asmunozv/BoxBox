@@ -2,6 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import controller.DriverMediaCard?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1" styleClass="explorer-view">
   <top>
     <VBox spacing="12">
@@ -39,7 +40,7 @@
             </FlowPane>
           </VBox></top>
           <center><TableView fx:id="resultsTable"/></center>
-           <bottom><VBox spacing="6"><Label fx:id="pointsLabel" wrapText="true" styleClass="explanation-card"/><Label fx:id="summaryLabel" wrapText="true" styleClass="muted"/></VBox></bottom>
+           <bottom><VBox spacing="6"><DriverMediaCard fx:id="driverMedia"/><Label fx:id="pointsLabel" wrapText="true" styleClass="explanation-card"/><Label fx:id="summaryLabel" wrapText="true" styleClass="muted"/></VBox></bottom>
           <padding><Insets top="14"/></padding>
         </BorderPane>
       </Tab>

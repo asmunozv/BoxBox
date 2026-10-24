@@ -3,7 +3,6 @@ package controller;
 import java.util.Arrays;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import model.entity.Circuit;
@@ -49,12 +48,11 @@ public class CircuitDetailsViewController {
     }
 
     public void setData(Circuit circuit, int season, int racesThisSeason) {
-        avatarImage.setImage(new Image(
+        avatarImage.setImage(LocalImageService.load(
             LocalImageService.resolveCircuitImage(
                 circuit.getErgastCircuitId(),
                 circuit.getName()
-            ),
-            true
+            )
         ));
 
         nameLabel.setText("Name: " + circuit.getName());

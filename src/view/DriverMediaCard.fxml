@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.scene.image.ImageView?>
+<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml/1" spacing="12" alignment="CENTER_LEFT" styleClass="driver-media-card">
+  <ImageView fx:id="photo" fitWidth="72" fitHeight="72" preserveRatio="true" accessibleText="Foto local del piloto seleccionado"/>
+  <VBox spacing="4" HBox.hgrow="ALWAYS" minWidth="100">
+    <Label fx:id="nameLabel" styleClass="stat-name" wrapText="true"/>
+    <Label fx:id="detailLabel" styleClass="muted" wrapText="true"/>
+    <Label fx:id="mediaStatus" styleClass="coverage-label" wrapText="true"/>
+  </VBox>
+  <VBox spacing="5"><Button fx:id="playButton" text="Escuchar" accessibleText="Escuchar audio local del piloto"/><Button fx:id="stopButton" text="Detener" disable="true"/></VBox>
+</fx:root>

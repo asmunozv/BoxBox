@@ -113,15 +113,9 @@ public class RaceViewController extends BorderPane implements SeasonAwareView {
     }
 
     private void loadMapImage() {
-        File[] candidates = {
-            new File("assets/images/maps/world_map_light.png"),
-            new File("src/assets/images/maps/world_map_light.png")
-        };
-        for (File file : candidates) {
-            if (!file.exists()) {
-                continue;
-            }
-            mapImageView.setImage(new Image(file.toURI().toString(), true));
+        var file=model.util.LocalResources.find("assets/images/maps/world_map_light.png","src/assets/images/maps/world_map_light.png");
+        if(file.isPresent()) {
+            mapImageView.setImage(new Image(file.get().toUri().toString(), false));
             return;
         }
         showInfo("World map", "Map image not found at assets/images/maps/world_map_light.png");

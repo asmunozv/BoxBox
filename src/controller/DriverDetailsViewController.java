@@ -3,7 +3,6 @@ package controller;
 import java.util.Arrays;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import model.entity.Driver;
@@ -76,12 +75,11 @@ public class DriverDetailsViewController {
         Integer resolvedDebut = debutSeason;
         String resolvedQuote = profile.quote == null ? getDefaultQuote() : profile.quote;
 
-        avatarImage.setImage(new Image(
+        avatarImage.setImage(LocalImageService.load(
             LocalImageService.resolveDriverImage(
                 driver.getErgastDriverId(),
                 driver.getGivenName() + " " + driver.getFamilyName()
-            ),
-            true
+            )
         ));
 
         nameLabel.setText("Name: " + driver.getGivenName() + " " + driver.getFamilyName());

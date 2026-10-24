@@ -112,8 +112,8 @@ public class MainViewController extends BorderPane implements view.DisposableVie
     }
 
     private Button nav(String text,Runnable action){Button button=new Button(text);button.getStyleClass().add("nav-item");button.setMaxWidth(Double.MAX_VALUE);button.setOnAction(e->{for(var node:analysisNavigation.getChildren())node.getStyleClass().remove("nav-active");for(var node:legacyNavigation.getChildren())node.getStyleClass().remove("nav-active");button.getStyleClass().add("nav-active");action.run();});return button;}
-    private void showContent(javafx.scene.Node content){miniGameView.onTabUnselected();contentHost.getChildren().setAll(content);FadeTransition fade=new FadeTransition(Duration.millis(160),content);fade.setFromValue(0.6);fade.setToValue(1);fade.play();}
-    @Override public void dispose(){miniGameView.onTabUnselected();bingoView.dispose();if(explorer!=null)explorer.dispose();}
+    private void showContent(javafx.scene.Node content){miniGameView.onTabUnselected();if(explorer!=null)explorer.stopAudio();for(Tab tab:tabPane.getTabs())if(tab.getContent() instanceof DriverViewController drivers)drivers.dispose();contentHost.getChildren().setAll(content);FadeTransition fade=new FadeTransition(Duration.millis(160),content);fade.setFromValue(0.6);fade.setToValue(1);fade.play();}
+    @Override public void dispose(){miniGameView.onTabUnselected();bingoView.dispose();for(Tab tab:tabPane.getTabs())if(tab.getContent() instanceof DriverViewController drivers)drivers.dispose();if(explorer!=null)explorer.dispose();}
 
     private void importApiData() {
         try {

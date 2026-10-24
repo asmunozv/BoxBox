@@ -3,7 +3,6 @@ package controller;
 import java.util.Arrays;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import model.entity.Race;
@@ -50,13 +49,12 @@ public class RaceDetailsViewController {
     }
 
     public void setData(Race race, int totalEntries, long winsInRace) {
-        avatarImage.setImage(new Image(
+        avatarImage.setImage(LocalImageService.load(
             LocalImageService.resolveRaceImage(
                 race.getName(),
                 race.getSeason() == null ? SeasonContext.getActiveSeason() : race.getSeason(),
                 race.getRoundNumber() == null ? 0 : race.getRoundNumber()
-            ),
-            true
+            )
         ));
 
         raceLabel.setText("Race: " + race.getName());

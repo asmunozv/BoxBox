@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import model.entity.Driver;
 import model.entity.DriverSeasonStats;
 import view.SeasonContext;
 
-public class DriverViewController extends BorderPane {
+public class DriverViewController extends BorderPane implements view.DisposableView {
 
     private final DriverController driverController;
     private final DriverConstructorSeasonController driverConstructorSeasonController;
@@ -152,12 +151,12 @@ public class DriverViewController extends BorderPane {
         stopCurrentAudio();
 
         try {
-            File file = resolveAudioFile(driver, audioFilePath);
-            if (file == null || !file.exists()) {
+            var file = model.util.LocalResources.driverAudio(driver.getErgastDriverId(),audioFilePath);
+            if (file.isEmpty()) {
                 return;
             }
 
-            Media media = new Media(file.toURI().toString());
+            Media media = new Media(file.get().toUri().toString());
             currentMediaPlayer = new MediaPlayer(media);
             currentMediaPlayer.play();
         } catch (RuntimeException exception) {
@@ -165,33 +164,7 @@ public class DriverViewController extends BorderPane {
         }
     }
 
-    private File resolveAudioFile(Driver driver, String audioFilePath) {
-        if (audioFilePath != null && !audioFilePath.isBlank()) {
-            File explicit = new File(audioFilePath);
-            if (explicit.exists()) {
-                return explicit;
-            }
-        }
-
-        if (driver == null || driver.getErgastDriverId() == null || driver.getErgastDriverId().isBlank()) {
-            return null;
-        }
-
-        String base = driver.getErgastDriverId().trim().toLowerCase();
-        String[] extensions = {".mp3", ".wav", ".m4a"};
-        for (String ext : extensions) {
-            File file = new File("assets/audio/drivers/" + base + ext);
-            if (file.exists()) {
-                return file;
-            }
-            File fileSrc = new File("src/assets/audio/drivers/" + base + ext);
-            if (fileSrc.exists()) {
-                return fileSrc;
-            }
-        }
-        return null;
-    }
-
+    @Override public void dispose(){stopCurrentAudio();}
     private void stopCurrentAudio() {
         if (currentMediaPlayer != null) {
             currentMediaPlayer.stop();

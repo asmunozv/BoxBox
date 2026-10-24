@@ -39,15 +39,37 @@ public final class HistoricalExplorerSmoke {
         require(races.getItems().size()==24&&races.getValue().season()==2024&&races.getValue().round()==1);
         require(table.getItems().size()==20);
         RaceData.Entry winner=table.getItems().stream().filter(e->Integer.valueOf(1).equals(e.position())).findFirst().orElseThrow();require(winner.points()==26);
+        require(((Label)field(explorer,"pointsLabel")).getText().contains("25 por P1 + 1 por vuelta rápida"));
         driver.setValue(winner.driver());require(table.getItems().size()==1);
         driver.setValue("Todos los pilotos");team.setValue(winner.team());require(table.getItems().size()==2);
         team.setValue("Todas las escuderías");search.setText("Norris");require(table.getItems().size()==1);
         search.setText("NO_MATCH_BOXBOX_TEST");require(table.getItems().isEmpty());search.clear();require(table.getItems().size()==20);
         session.setValue("Sprint");require(table.getItems().isEmpty());session.setValue("Carrera");require(table.getItems().size()==20);
         require(((ListView<?>)field(explorer,"sourcesList")).getItems().size()>=6);
-        System.out.println("HISTORICAL_EXPLORER_UI_PASSED: 24 races, real 26-point winner, driver/team/search/session filters, empty state and source records");
+        System.out.println("HISTORICAL_EXPLORER_UI_PASSED: 24 races, P1 25 + 1 fastest-lap breakdown, driver/team/search/session filters, empty state and source records");
         if(explorer.getClass().getSimpleName().equals("RaceLabController"))verifyAnalysis();
-        if(gallery){((Label)field(stage.getScene().getRoot(),"userLabel")).setText("Sesión de demostración");capture(0);}else finish();
+        verifyMedia();
+    }
+    static void verifyMedia()throws Exception {
+        Object card=field(explorer,"driverMedia");
+        var image=((javafx.scene.image.ImageView)field(card,"photo")).getImage();
+        require(image!=null&&!image.isError()&&image.getWidth()>64);
+        require(((Label)field(card,"nameLabel")).getText().equals("Max Verstappen"));
+        ((TabPane)field(explorer,"analysisTabs")).getSelectionModel().select(0);
+        Button play=(Button)field(card,"playButton");require(!play.isDisabled());play.fire();waitAudio(card,0);
+    }
+    static void waitAudio(Object card,int attempt)throws Exception {
+        later(100,()->{
+            var player=(javafx.scene.media.MediaPlayer)field(card,"player");
+            require(player!=null&&player.getError()==null);
+            if(player.getStatus()!=javafx.scene.media.MediaPlayer.Status.PLAYING){if(attempt>=25)throw new AssertionError("Driver audio did not start");waitAudio(card,attempt+1);return;}
+            ((Button)field(card,"stopButton")).fire();require(field(card,"player")==null);
+            require(player.getStatus()==javafx.scene.media.MediaPlayer.Status.DISPOSED);
+            ((Button)field(card,"playButton")).fire();require(field(card,"player")!=null);
+            ((TabPane)field(explorer,"analysisTabs")).getSelectionModel().select(1);require(field(card,"player")==null);
+            System.out.println("HISTORICAL_MULTIMEDIA_PASSED: original driver photo decoded, user-triggered audio PLAYING, stop and tab-change disposal");
+            if(gallery){((Label)field(stage.getScene().getRoot(),"userLabel")).setText("Sesión de demostración");capture(0);}else finish();
+        });
     }
     static void capture(int index)throws Exception{
         TabPane tabs=(TabPane)field(explorer,"analysisTabs");if(index>=tabs.getTabs().size()){System.out.println("VISUAL_GALLERY="+EVIDENCE);finish();return;}tabs.getSelectionModel().select(index);

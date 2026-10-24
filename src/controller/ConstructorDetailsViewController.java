@@ -3,7 +3,6 @@ package controller;
 import java.util.Arrays;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import model.entity.Constructor;
@@ -50,12 +49,11 @@ public class ConstructorDetailsViewController {
     }
 
     public void setData(Constructor constructorEntity, ConstructorSeasonStats stats, int season) {
-        avatarImage.setImage(new Image(
+        avatarImage.setImage(LocalImageService.load(
             LocalImageService.resolveConstructorImage(
                 constructorEntity.getErgastConstructorId(),
                 constructorEntity.getName()
-            ),
-            true
+            )
         ));
 
         nameLabel.setText("Name: " + constructorEntity.getName());

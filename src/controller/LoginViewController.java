@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.File;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -98,17 +97,10 @@ public class LoginViewController extends BorderPane implements DisposableView {
     }
 
     private MediaView createBackgroundVideo() {
-        File[] candidates = {
-            new File("assets/video/login.mp4"),
-            new File("src/assets/video/login.mp4")
-        };
-
-        for (File file : candidates) {
-            if (!file.exists()) {
-                continue;
-            }
+        var file = model.util.LocalResources.find("assets/video/login.mp4","src/assets/video/login.mp4");
+        if(file.isPresent()) {
             try {
-                Media media = new Media(file.toURI().toString());
+                Media media = new Media(file.get().toUri().toString());
                 MediaPlayer player = new MediaPlayer(media);
                 backgroundPlayer = player;
                 player.setMute(true);

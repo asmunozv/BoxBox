@@ -1,9 +1,8 @@
 package view;
 
-import java.io.File;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import model.util.LocalResources;
 
 public final class AppAudio {
 
@@ -11,14 +10,13 @@ public final class AppAudio {
     }
 
     public static MediaPlayer playLoop(String... candidatePaths) {
-        stop(null);
-        File file = resolveFile(candidatePaths);
-        if (file == null) {
+        var file = LocalResources.find(candidatePaths);
+        if (file.isEmpty()) {
             return null;
         }
 
         try {
-            Media media = new Media(file.toURI().toString());
+            Media media = new Media(file.get().toUri().toString());
             MediaPlayer player = new MediaPlayer(media);
             player.setCycleCount(MediaPlayer.INDEFINITE);
             player.play();
@@ -35,16 +33,4 @@ public final class AppAudio {
         }
     }
 
-    private static File resolveFile(String... paths) {
-        for (String path : paths) {
-            if (path == null || path.isBlank()) {
-                continue;
-            }
-            File file = new File(path);
-            if (file.exists()) {
-                return file;
-            }
-        }
-        return null;
-    }
 }

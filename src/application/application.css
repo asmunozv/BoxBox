@@ -241,3 +241,4 @@
 .combo-box > .list-cell { -fx-background-color: transparent; -fx-text-fill: #e1e9f6; }
 .titled-pane > .title { -fx-background-color: #18253a; -fx-padding: 8; }
 .titled-pane > .content { -fx-background-color: #101a2b; -fx-border-color: #293851; -fx-padding: 10; }
+.driver-media-card { -fx-background-color: #131d2e; -fx-background-radius: 8; -fx-padding: 10 12; }
