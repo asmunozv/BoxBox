@@ -85,9 +85,11 @@ public class MainViewController extends BorderPane {
         Tab miniGameTab = createTab("Mini Game", miniGameView);
         tabPane.getTabs().add(miniGameTab);
         tabPane.getStyleClass().add("legacy-tabs");
-        explorer = new HistoricalExplorerController();
+        explorer = new RaceLabController();
         Button explore = nav("Explorador histórico", () -> showContent(explorer));
         analysisNavigation.getChildren().add(explore);
+        String[] analysisTitles={"Comparador","Neumáticos","Paradas en pits","Evolución de posiciones","Simulador"};
+        for(int i=0;i<analysisTitles.length;i++){final int index=i+1;analysisNavigation.getChildren().add(nav(analysisTitles[i],()->{showContent(explorer);explorer.openTab(index);}));}
         String[] titles={"Pilotos","Escuderías","Mapa y circuitos","Gestión de resultados","Bingo","Arcade"};
         for(int i=0;i<titles.length;i++){
             final int index=i;

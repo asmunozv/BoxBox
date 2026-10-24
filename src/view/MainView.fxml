@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1" styleClass="main-view">
-  <left><VBox fx:id="sidebar" prefWidth="210" minWidth="185" spacing="8" styleClass="sidebar">
+  <left><ScrollPane fitToWidth="true" prefWidth="215" minWidth="185" hbarPolicy="NEVER"><content><VBox fx:id="sidebar" prefWidth="205" spacing="8" styleClass="sidebar">
     <Label text="BOXBOX" styleClass="brand"/><Label text="RACING · UNDERSTOOD" styleClass="brand-caption"/>
     <Separator/><Label text="ANÁLISIS" styleClass="nav-section"/>
     <VBox fx:id="analysisNavigation" spacing="5"/>
@@ -14,6 +14,6 @@
     <Label fx:id="seasonLabel" text="MySQL local · boxbox_db" styleClass="connection-badge"/>
     <Button fx:id="logoutButton" text="Cerrar sesión" maxWidth="Infinity"/>
     <padding><Insets top="28" right="14" bottom="20" left="18"/></padding>
-  </VBox></left>
+  </VBox></content></ScrollPane></left>
   <center><StackPane fx:id="contentHost"/></center>
 </fx:root>

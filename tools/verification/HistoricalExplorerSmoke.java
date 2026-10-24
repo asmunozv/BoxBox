@@ -43,7 +43,26 @@ public final class HistoricalExplorerSmoke {
         session.setValue("Sprint");require(table.getItems().isEmpty());session.setValue("Carrera");require(table.getItems().size()==20);
         require(((ListView<?>)field(explorer,"sourcesList")).getItems().size()>=6);
         System.out.println("HISTORICAL_EXPLORER_UI_PASSED: 24 races, real 26-point winner, driver/team/search/session filters, empty state and source records");
+        if(explorer.getClass().getSimpleName().equals("RaceLabController"))verifyAnalysis();
         stage.close();Platform.exit();System.exit(0);
+    }
+    static void verifyAnalysis()throws Exception{
+        Object comparison=field(explorer,"comparison"),tyres=field(explorer,"tyres"),pits=field(explorer,"pits"),positions=field(explorer,"positions"),simulation=field(explorer,"simulation");
+        require(((TableView<?>)field(comparison,"metrics")).getItems().size()==8);
+        @SuppressWarnings("unchecked") ComboBox<String> mode=(ComboBox<String>)field(comparison,"mode");mode.setValue("Escuderías");require(((TableView<?>)field(comparison,"metrics")).getItems().size()==8);mode.setValue("Pilotos");
+        require(((javafx.scene.chart.LineChart<?,?>)field(comparison,"pointsChart")).getData().size()==2);
+        require(((javafx.scene.layout.VBox)field(tyres,"timelines")).getChildren().size()>=4);
+        require(((javafx.scene.chart.LineChart<?,?>)field(tyres,"lapChart")).getData().size()==2);
+        require(((TableView<?>)field(pits,"pitTable")).getItems().size()>=4);
+        var chart=(javafx.scene.chart.LineChart<?,?>)field(positions,"positions");int count=chart.getData().size();require(count>=4);
+        var axis=(javafx.scene.chart.NumberAxis)field(positions,"positionAxis");require(axis.getUpperBound()==-1&&axis.getLowerBound()<=-20);
+        var checks=(javafx.scene.layout.FlowPane)field(positions,"driverChoices");((CheckBox)checks.getChildren().get(0)).fire();require(chart.getData().size()<count);
+        Button calculate=(Button)field(simulation,"calculate");require(!calculate.isDisable());
+        TextField stops=(TextField)field(simulation,"stops"),degradation=(TextField)field(simulation,"degradation");
+        String original=stops.getText();degradation.setText("0.08");stops.setText(original.replaceFirst("17:","14:"));calculate.fire();require(((Label)field(simulation,"resultLabel")).getText().startsWith("ESTIMADO"));
+        require(((javafx.scene.chart.LineChart<?,?>)field(simulation,"deltaChart")).getData().size()==2);
+        stops.setText("14:HARD;14:SOFT");calculate.fire();require(((Label)field(simulation,"resultLabel")).getText().startsWith("Escenario no calculado"));stops.setText(original);calculate.fire();require(((Label)field(simulation,"resultLabel")).getText().startsWith("ESTIMADO"));
+        System.out.println("ANALYTICAL_UI_PASSED: driver/team comparison, two tyre timelines, pits, reversed position axis, pilot visibility, simulator controls and invalid-input handling");
     }
     static Object field(Object o,String name)throws Exception{for(Class<?> c=o.getClass();c!=null;c=c.getSuperclass())try{Field f=c.getDeclaredField(name);f.setAccessible(true);return f.get(o);}catch(NoSuchFieldException ignored){}throw new NoSuchFieldException(name);}
     static void later(int ms,Step step){PauseTransition p=new PauseTransition(Duration.millis(ms));p.setOnFinished(e->Platform.runLater(()->{try{step.run();}catch(Throwable x){fail(x);}}));p.play();}
