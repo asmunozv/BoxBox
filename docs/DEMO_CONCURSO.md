@@ -16,7 +16,7 @@ carreras utiliza internet una vez y después deja sus observaciones en MySQL.
 
 | Tiempo orientativo | Acción | Evidencia que mostrar |
 |---|---|---|
-| 0:00–0:40 | Resumen, filtros y fuente | 20 pilotos, 57 vueltas; ganador con 26 puntos oficiales conservados |
+| 0:00–0:40 | Resumen, filtros y fuente | 20 pilotos, 57 vueltas; Max: 25 por P1 + 1 por vuelta rápida = 26 oficiales |
 | 0:40–1:20 | Narrativa y posiciones | Cambios observados, P1 arriba, pilotos ocultables y puntos con referencia de pits |
 | 1:20–2:10 | Neumáticos | Max: SOFT 1–17, HARD 18–37, SOFT 38–57; juego inicial ya usado (edad 3) |
 | 2:10–2:50 | Pits | Tránsito separado del estacionario; este último no disponible para Baréin 2024 |
@@ -27,6 +27,16 @@ carreras utiliza internet una vez y después deja sus observaciones en MySQL.
 Para el experimento, la sintaxis permite `14:HARD:0;37:SOFT:0`. También admite
 cero o varias paradas, con validación. Los coeficientes son aproximados/editables.
 No prometer que adelantar una parada habría cambiado de manera exacta la posición final.
+
+### Por qué aparecen 26 puntos en Baréin 2024
+
+Ganar con la escala completa otorga **25 puntos**. Max también obtuvo el punto
+extra por vuelta rápida, vigente de 2019 a 2024 para pilotos del top 10. La tabla
+muestra el desglose `25 + 1 VR = 26`, confirmado por el rango de vuelta rápida
+de la instantánea. Desde 2025 no existe ese punto extra. Los totales especiales
+o históricos se conservan sin forzar un desglose que la evidencia no permite.
+Contraste oficial: https://www.formula1.com/en/results/2024/races/1229/bahrain/race-result
+(incluye la nota explícita del punto adicional de Verstappen).
 
 ## Respuestas técnicas defendibles
 

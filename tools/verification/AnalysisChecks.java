@@ -35,6 +35,16 @@ public final class AnalysisChecks {
         require(analysis.statistics(List.of(fake),"B",false).qualifying()==null);
         HistoryService service=new HistoryService();var race=service.races().stream().filter(r->r.season()==2024&&r.round()==1).findFirst().orElseThrow();RaceData real=service.race(race);List<RaceData> season=service.season(2024);
         var max=analysis.statistics(season,"max_verstappen",false);close(max.points(),437);require(max.wins()==9&&max.podiums()==14);
+        RaceScoring scoring=new RaceScoring();Entry winner=real.driver("max_verstappen").orElseThrow();
+        var points=scoring.explain(race,winner);close(points.position(),25);close(points.fastestLap(),1);close(points.official(),26);require(points.label().equals("25 + 1 VR = 26"));require(winner.fastestLapRank()==1);
+        close(scoring.explain(race,real.driver("perez").orElseThrow()).position(),18);
+        RaceInfo modern=new RaceInfo("2025:1",2025,1,"SYNTHETIC_SCORING_TEST",LocalDate.of(2025,1,1),"test","test","test","test",null,null);
+        close(scoring.explain(modern,entry("A",1,25,"RACE",1)).position(),25);
+        require(scoring.explain(modern,entry("A",1,26,"RACE",1)).position()==null);
+        require(scoring.explain(race,entry("A",1,26,"RACE",1)).position()==null); // no fastest-lap evidence
+        require(scoring.explain(race,entry("A",1,12.5,"RACE",1)).position()==null); // reduced points are not rewritten
+        close(scoring.explain(race,entry("A",1,8,"SPRINT",1)).position(),8);
+        require(scoring.explain(synthetic,entry("A",1,25,"RACE",1)).position()==null); // no modern scale imposed on old seasons
         require(real.raceEntries().size()==20&&real.lapCount()==57&&real.stints().size()==63&&real.pits().size()==43);
         require(real.pits().stream().allMatch(p->p.stationarySeconds()==null));
         var history=simulator.historical(real,"max_verstappen");require(history.initialAge()==3&&history.stops().get(0).afterLap()==17&&history.stops().get(1).afterLap()==37);

@@ -16,7 +16,14 @@ public record RaceData(RaceInfo race, List<Entry> entries, List<Lap> laps, List<
     }
     public record Entry(String driverId,String driver,String code,int number,String teamId,String team,
                         Integer grid,Integer position,double points,int completedLaps,String status,
-                        Integer qualifying,Double q1,Double q2,Double q3,Double totalSeconds,String session) {
+                         Integer qualifying,Double q1,Double q2,Double q3,Double totalSeconds,String session,
+                         Integer fastestLapRank) {
+        public Entry(String driverId,String driver,String code,int number,String teamId,String team,
+                     Integer grid,Integer position,double points,int completedLaps,String status,
+                     Integer qualifying,Double q1,Double q2,Double q3,Double totalSeconds,String session) {
+            this(driverId,driver,code,number,teamId,team,grid,position,points,completedLaps,status,
+                qualifying,q1,q2,q3,totalSeconds,session,null);
+        }
         @Override public String toString(){return driver;}
         public boolean race(){return "RACE".equals(session);}
     }

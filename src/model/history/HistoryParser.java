@@ -34,7 +34,7 @@ public final class HistoryParser {
                 Double millis=decimal(object(x,"Time"),"millis");Integer number=integer(x,"number"),completed=integer(x,"laps");
                 Entry e=new Entry(id,or(text(driver,"givenName"),"")+" "+or(text(driver,"familyName"),""),or(text(driver,"code"),id),number==null?0:number,
                     or(text(team,"constructorId"),"unknown"),or(text(team,"name"),"Sin escudería"),integer(x,"grid"),integer(x,"position"),points,completed==null?0:completed,or(text(x,"status"),"Sin estado"),
-                    integer(q,"position"),seconds(text(q,"Q1")),seconds(text(q,"Q2")),seconds(text(q,"Q3")),millis==null?null:millis/1000,session);
+                    integer(q,"position"),seconds(text(q,"Q1")),seconds(text(q,"Q2")),seconds(text(q,"Q3")),millis==null?null:millis/1000,session,integer(object(x,"FastestLap"),"rank"));
                 if(entries.putIfAbsent(session+":"+id,e)!=null)throw new IllegalArgumentException("Resultado duplicado en las páginas de la fuente.");
             }
         }

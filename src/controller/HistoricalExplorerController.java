@@ -17,6 +17,7 @@ import static model.history.RaceData.*;
 public class HistoricalExplorerController extends BorderPane implements view.DisposableView {
     final HistoryService service=new HistoryService();
     final HistoryImportService importer=new HistoryImportService();
+    private final RaceScoring scoring=new RaceScoring();
     List<RaceInfo> calendar=List.of();
     List<RaceData> seasonData=List.of();
     RaceData data;
@@ -29,7 +30,7 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
     @FXML TextField searchField;
     @FXML Button seasonImportButton,raceImportButton,demoButton;
     @FXML ProgressIndicator loading;
-    @FXML Label statusLabel,titleLabel,circuitLabel,coverageLabel,winnerValue,entriesValue,lapsValue,qualifyingValue,summaryLabel;
+    @FXML Label statusLabel,titleLabel,circuitLabel,coverageLabel,winnerValue,entriesValue,lapsValue,qualifyingValue,summaryLabel,pointsLabel;
     @FXML TableView<Entry> resultsTable;
     @FXML ListView<String> sourcesList;
     @FXML TabPane analysisTabs;
@@ -48,12 +49,13 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         column("Pos.",e->e.position()==null?"—":"P"+e.position(),55);
         column("Piloto",Entry::driver,170);column("Escudería",Entry::team,150);
         column("Salida",e->e.grid()==null?"—":e.grid()==0?"Pit lane":"P"+e.grid(),75);
-        column("Puntos",e->String.format(Locale.ROOT,"%.2f",e.points()),75);
+        column("Puntos · VR = extra",e->scoring.explain(data.race(),e).label(),135);
         column("Clasif.",e->e.qualifying()==null?"—":"P"+e.qualifying(),65);
         column("Q1",e->Timing.format(e.q1()),90);column("Q2",e->Timing.format(e.q2()),90);column("Q3",e->Timing.format(e.q3()),90);
         column("Vueltas",e->""+e.completedLaps(),60);column("Estado",Entry::status,130);
         resultsTable.setPlaceholder(new Label("Sin resultados locales para esta selección. Prepara la carrera para comenzar."));
         resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        resultsTable.getSelectionModel().selectedItemProperty().addListener((o,a,b)->showPoints(b));
         for(ComboBox<?> box:List.of(driverFilter,teamFilter,sessionFilter))box.setOnAction(e->filter());
         searchField.textProperty().addListener((o,a,b)->filter());
         seasonCombo.setOnAction(e->{if(!selecting)selectSeason();});raceCombo.setOnAction(e->{if(!busy.get()&&!selecting)loadRace();});
@@ -81,13 +83,16 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         sourcesList.getItems().setAll(data.sources().stream().map(s->s.kind()+" · "+s.provider()+" · "+s.fetchedAt()+"\n"+s.url()+"\nSHA-256 "+s.sha256()).toList());
         filter();onRaceChanged();
     }
-    void resetMetrics(){winnerValue.setText("—");entriesValue.setText("—");lapsValue.setText("—");qualifyingValue.setText("—");summaryLabel.setText("Cada resultado procede de una instantánea verificable. Los datos faltantes se muestran como —.");}
+    void resetMetrics(){winnerValue.setText("—");entriesValue.setText("—");lapsValue.setText("—");qualifyingValue.setText("—");summaryLabel.setText("Cada resultado procede de una instantánea verificable. Los datos faltantes se muestran como —.");pointsLabel.setText("Selecciona una carrera para consultar sus puntos oficiales.");}
     void filter(){
         if(data==null)return;String driver=driverFilter.getValue(),team=teamFilter.getValue(),search=searchField.getText()==null?"":searchField.getText().toLowerCase(Locale.ROOT).trim();String session="Sprint".equals(sessionFilter.getValue())?"SPRINT":"RACE";
         List<Entry> rows=data.entries().stream().filter(e->e.session().equals(session)).filter(e->driver==null||driver.startsWith("Todos")||e.driver().equals(driver)).filter(e->team==null||team.startsWith("Todas")||e.team().equals(team)).filter(e->(e.driver()+" "+e.team()+" "+e.code()+" "+e.status()).toLowerCase(Locale.ROOT).contains(search)).sorted(Comparator.comparing(e->e.position()==null?999:e.position())).toList();
         resultsTable.setItems(FXCollections.observableArrayList(rows));
+        resultsTable.getSelectionModel().selectFirst();
+        if(rows.isEmpty())showPoints(null);
         summaryLabel.setText(rows.size()+" resultados en esta selección. Parrilla y clasificación cronometrada son diferentes: las sanciones pueden cambiar la salida. Puntos conservados de la fuente; los abandonos mantienen su estado.");
     }
+    private void showPoints(Entry entry){pointsLabel.setText(data==null||entry==null?"Selecciona una fila para entender el desglose de puntos.":scoring.explain(data.race(),entry).explanation());}
     protected void onRaceChanged(){}
     public void openTab(int index){analysisTabs.getSelectionModel().select(index);}
     public void prepareSeason(){Integer year=seasonCombo.getValue();if(year==null)return;importJob("Preparando temporada…",p->importer.season(year,p));}

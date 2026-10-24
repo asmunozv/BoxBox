@@ -39,7 +39,7 @@
             </FlowPane>
           </VBox></top>
           <center><TableView fx:id="resultsTable"/></center>
-          <bottom><Label fx:id="summaryLabel" wrapText="true" styleClass="explanation-card"/></bottom>
+           <bottom><VBox spacing="6"><Label fx:id="pointsLabel" wrapText="true" styleClass="explanation-card"/><Label fx:id="summaryLabel" wrapText="true" styleClass="muted"/></VBox></bottom>
           <padding><Insets top="14"/></padding>
         </BorderPane>
       </Tab>
