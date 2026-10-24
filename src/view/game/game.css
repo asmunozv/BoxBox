@@ -1,0 +1,20 @@
+/* All selectors are scoped to the game. The application's shared stylesheet is untouched. */
+.grand-prix-game { -fx-background-color: #0a0f19; }
+.grand-prix-game .gp-title { -fx-font-size: 23px; -fx-font-weight: bold; -fx-text-fill: #f3f6ff; }
+.grand-prix-game .gp-caption { -fx-font-size: 11px; -fx-text-fill: #a4b6d1; }
+.grand-prix-game .gp-badge { -fx-background-color: #382032; -fx-background-radius: 6; -fx-text-fill: #ff8290; -fx-padding: 9 12; -fx-font-weight: bold; }
+.grand-prix-game .gp-panel { -fx-background-color: #131d2e; -fx-background-radius: 9; -fx-padding: 12; }
+.grand-prix-game .gp-stat { -fx-background-color: #131d2e; -fx-background-radius: 7; -fx-padding: 10 13; -fx-spacing: 5; -fx-min-width: 110; }
+.grand-prix-game .gp-value { -fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: white; }
+.grand-prix-game .gp-flag { -fx-text-fill: #f6cb60; -fx-font-weight: bold; }
+.grand-prix-game .gp-radio { -fx-background-color: #1b273d; -fx-background-radius: 6; -fx-border-color: transparent transparent transparent #ff455d; -fx-border-width: 0 0 0 3; -fx-padding: 9 12; -fx-text-fill: #e4ecfa; }
+.grand-prix-game .gp-forecast { -fx-text-fill: #8ed2f0; }
+.grand-prix-game .gp-tower { -fx-background-color: #101827; -fx-padding: 8 0 8 10; }
+.grand-prix-game .table-row-cell { -fx-cell-size: 30px; }
+.grand-prix-game .table-view .column-header .label { -fx-font-size: 11px; }
+.grand-prix-game .table-cell { -fx-font-size: 11px; }
+.grand-prix-game .progress-bar > .track { -fx-background-color: #26344b; }
+.grand-prix-game .progress-bar > .bar { -fx-background-color: #ff667c; -fx-background-insets: 1; -fx-padding: 5; }
+.grand-prix-game .toggle-button:selected { -fx-background-color: #285445; -fx-text-fill: #b8ffe0; }
+.grand-prix-game .list-cell { -fx-padding: 6 9; }
+.grand-prix-game .combo-box { -fx-min-height: 32; }

@@ -1,34 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-
-<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
-    <top>
-        <HBox spacing="12">
-            <padding>
-                <Insets bottom="8" />
-            </padding>
-            <Label text="Mini Game - Avoid Crashes" styleClass="section-title" />
-        </HBox>
-    </top>
-    <center>
-        <Canvas fx:id="canvas" width="900.0" height="560.0" />
-    </center>
-    <bottom>
-        <HBox spacing="10">
-            <padding>
-                <Insets top="8" />
-            </padding>
-            <Label text="Team:" />
-            <ComboBox fx:id="teamCombo" />
-            <Button text="Start" styleClass="danger-button" onAction="#onStartGame" />
-            <Label fx:id="statusLabel" text="Pick team color and press Start." />
-        </HBox>
-    </bottom>
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.scene.canvas.Canvas?><?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1" styleClass="grand-prix-game">
+ <center><ScrollPane fx:id="gameScroll" fitToWidth="true" hbarPolicy="NEVER"><content><VBox spacing="12" minWidth="0">
+  <HBox spacing="12" alignment="CENTER_LEFT"><VBox HBox.hgrow="ALWAYS"><Label text="BOXBOX GRAND PRIX" styleClass="gp-title"/><Label text="SIMULACIÓN LÚDICA · rivales, circuitos y tiempos ficticios" styleClass="gp-caption" wrapText="true"/></VBox><Label fx:id="sessionLabel" text="GP LIBRE" styleClass="gp-badge"/></HBox>
+  <FlowPane hgap="10" vgap="8" styleClass="gp-panel">
+   <VBox><Label text="EXPERIENCIA" styleClass="gp-caption"/><ComboBox fx:id="modeCombo" prefWidth="175"/></VBox>
+   <VBox><Label text="ESCUDERÍA / COLOR" styleClass="gp-caption"/><ComboBox fx:id="teamCombo" prefWidth="135"/></VBox>
+   <VBox><Label text="DIFICULTAD" styleClass="gp-caption"/><ComboBox fx:id="difficultyCombo" prefWidth="135"/></VBox>
+   <VBox><Label text="VUELTAS" styleClass="gp-caption"/><ComboBox fx:id="lapsCombo" prefWidth="80"/></VBox>
+   <VBox><Label text="CIRCUITO DEL JUEGO" styleClass="gp-caption"/><ComboBox fx:id="trackCombo" prefWidth="155"/></VBox>
+   <VBox><Label text="CLIMA" styleClass="gp-caption"/><ComboBox fx:id="weatherCombo" prefWidth="165"/></VBox>
+   <VBox><Label text="GOMA DE SALIDA" styleClass="gp-caption"/><ComboBox fx:id="startingTyreCombo" prefWidth="150"/></VBox>
+  </FlowPane>
+  <FlowPane hgap="8" vgap="7" alignment="CENTER_LEFT"><Button fx:id="startButton" text="Iniciar GP" styleClass="danger-button" onAction="#onStartGame"/><Button fx:id="pauseButton" text="Pausa [Espacio]" disable="true"/><Button fx:id="nextButton" text="Siguiente GP" disable="true"/><Label text="Ritmo del juego"/><ComboBox fx:id="speedCombo" prefWidth="85"/><CheckBox fx:id="assistCheck" text="Asistencia de trayectoria" selected="true"/></FlowPane>
+  <Label fx:id="statusLabel" text="Empieza con Aprendiz y 6 vueltas. El acelerador es automático; tú decides trayectoria y estrategia." wrapText="true" styleClass="gp-radio"/>
+  <FlowPane fx:id="liveHud" hgap="8" vgap="8">
+   <VBox styleClass="gp-stat"><Label text="VUELTA" styleClass="gp-caption"/><Label fx:id="lapLabel" text="—" styleClass="gp-value"/></VBox>
+   <VBox styleClass="gp-stat"><Label text="POSICIÓN" styleClass="gp-caption"/><Label fx:id="positionLabel" text="—" styleClass="gp-value"/></VBox>
+   <VBox styleClass="gp-stat"><Label text="RELOJ DE CARRERA" styleClass="gp-caption"/><Label fx:id="clockLabel" text="0:00.0" styleClass="gp-value"/></VBox>
+   <VBox styleClass="gp-stat"><Label text="ÚLTIMA / MEJOR VUELTA" styleClass="gp-caption"/><Label fx:id="lapTimeLabel" text="— / —"/></VBox>
+   <VBox styleClass="gp-stat"><Label text="DIRECCIÓN DE CARRERA" styleClass="gp-caption"/><Label fx:id="flagLabel" text="LISTO" styleClass="gp-flag"/></VBox>
+  </FlowPane>
+  <Label fx:id="weatherLabel" text="El pronóstico aparecerá al iniciar." wrapText="true" styleClass="gp-forecast"/>
+  <BorderPane>
+   <center><StackPane fx:id="canvasHost" minWidth="300" prefHeight="410" minHeight="350"><Canvas fx:id="canvas" width="640" height="410"/></StackPane></center>
+   <right><VBox fx:id="towerPane" spacing="8" prefWidth="255" minWidth="235" styleClass="gp-tower">
+    <Label text="TORRE DE POSICIONES" styleClass="gp-caption"/><Label text="Diferencias estimadas al líder" styleClass="gp-caption"/>
+    <TableView fx:id="timingTable" prefHeight="285" minHeight="250"/>
+    <Label text="PRÓXIMA PARADA" styleClass="gp-caption"/><ComboBox fx:id="pitTyreCombo" maxWidth="Infinity"/>
+    <Button fx:id="pitButton" text="BOX · Solicitar parada [P]" maxWidth="Infinity" disable="true"/>
+    <Label fx:id="pitLabel" text="Se entra al alcanzar la zona de boxes." wrapText="true" styleClass="gp-caption"/>
+   </VBox></right>
+  </BorderPane>
+  <FlowPane fx:id="telemetryPane" hgap="10" vgap="8" styleClass="gp-panel">
+   <VBox prefWidth="165"><Label fx:id="tyreLabel" text="NEUMÁTICOS · —"/><ProgressBar fx:id="tyreBar" progress="1" prefWidth="155"/><Label fx:id="temperatureLabel" text="Temperatura · —" styleClass="gp-caption"/></VBox>
+   <VBox prefWidth="165"><Label fx:id="fuelLabel" text="COMBUSTIBLE · —"/><ProgressBar fx:id="fuelBar" progress="1" prefWidth="155"/><Label text="No se reposta en boxes" styleClass="gp-caption"/></VBox>
+   <VBox prefWidth="165"><Label fx:id="energyLabel" text="ERS · —"/><ProgressBar fx:id="energyBar" progress="1" prefWidth="155"/><Label fx:id="speedLabel" text="Velocidad · —" styleClass="gp-caption"/></VBox>
+   <VBox prefWidth="195"><Label fx:id="drsLabel" text="DRS · —" wrapText="true"/><ToggleButton fx:id="drsButton" text="Solicitar DRS [D]" selected="true"/></VBox>
+  </FlowPane>
+  <FlowPane fx:id="strategyPane" hgap="10" vgap="8" alignment="CENTER_LEFT"><Label text="CONDUCCIÓN" styleClass="gp-caption"/><ComboBox fx:id="styleCombo" prefWidth="150"/><Label text="ENERGÍA" styleClass="gp-caption"/><ComboBox fx:id="energyCombo" prefWidth="150"/><Label fx:id="penaltyLabel" text="Avisos 0/3 · penalización 0 s" wrapText="true"/></FlowPane>
+  <Label fx:id="controlsHint" text="← → cambia de trayectoria para adelantar. P pide/cancela boxes. E alterna ERS. D solicita DRS. Espacio pausa. La asistencia recupera la trazada tras soltar las flechas. El reloj está abreviado: 1× equivale a 3 segundos del juego por segundo real." wrapText="true" styleClass="gp-caption"/>
+  <TitledPane text="Radio y banderas · últimas decisiones" expanded="true"><content><ListView fx:id="eventsList" prefHeight="125" minHeight="100"/></content></TitledPane>
+  <VBox fx:id="resultsPane" spacing="10" visible="false" managed="false" styleClass="gp-panel">
+   <Label text="RESULTADO DEL GRAN PREMIO" styleClass="gp-title"/><Label fx:id="resultSummary" wrapText="true"/>
+    <TableView fx:id="resultsTable" prefHeight="315"/><Label fx:id="progressLabel" wrapText="true" styleClass="gp-forecast"/>
+    <FlowPane hgap="8" vgap="8"><Button fx:id="nextResultButton" text="Siguiente Gran Premio" styleClass="danger-button"/><Button fx:id="setupButton" text="Volver a configurar carrera"/></FlowPane>
+   <Label fx:id="championshipTitle" text="CAMPEONATO DE ESTA SESIÓN" styleClass="gp-caption"/><TableView fx:id="championshipTable" prefHeight="200"/>
+  </VBox>
+  <TitledPane text="Ingeniero de carrera · cómo jugar y reglas" expanded="false"><content><VBox spacing="10">
+   <Label text="Objetivo: completa las vueltas y gana posiciones. Aceleración/frenada son automáticas; la trayectoria, el ritmo, la energía y las decisiones de boxes son tuyas. Los rivales agresivos atacan, los conservadores cuidan recursos y los estrategas reaccionan antes a la lluvia." wrapText="true"/>
+   <Label text="Blandos: más ritmo, más desgaste. Medios: equilibrio. Duros: más duración. Intermedios para agua moderada y lluvia extrema para mucha agua; en seco se desgastan más. Mira el porcentaje de vida, temperatura y pronóstico." wrapText="true"/>
+   <Label text="BOX prepara el compuesto elegido y entra en la siguiente zona de boxes (88% de vuelta). Puedes cancelar antes de entrar. Tránsito y mecánicos consumen tiempo real del modelo; hay paradas lentas ocasionales. Los rivales también paran. No se añade combustible." wrapText="true"/>
+   <Label text="DRS exige completar dos vueltas, pista seca, bandera verde, zona habilitada y rival a menos de un segundo. Desplegar ERS gasta batería; Recuperar cede ritmo para recargarla. Atacar usa más combustible/neumáticos y aumenta el riesgo de error." wrapText="true"/>
+   <Label text="SC/VSC limitan velocidad e impiden adelantamientos; los pits siguen abiertos. Tres salidas sostenidas de pista añaden 5 s. Un contacto evitable atacando añade 5 s. Regla simplificada del juego: +15 s si acabas una carrera seca sin usar dos compuestos. En carrera mojada se elimina esa obligación." wrapText="true"/>
+   <Label text="Puntuación por posición: 25, 18, 15, 12, 10, 8, 6, 4… sin extra de vuelta rápida. El campeonato tiene tres GP; XP premia vueltas limpias y decisiones oportunas. La progresión se conserva durante esta sesión del juego, sin modificar resultados históricos ni cuentas." wrapText="true"/>
+   <Label text="Arcade clásico conserva el juego de esquivar obstáculos con flechas y puntuación. Cada nuevo GP usa una semilla distinta. Es un juego estratégico simplificado, no una reproducción física de un F1 real." wrapText="true"/>
+  </VBox></content></TitledPane>
+  <padding><Insets top="18" right="18" bottom="22" left="18"/></padding>
+ </VBox></content></ScrollPane></center>
 </fx:root>
