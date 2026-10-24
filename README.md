@@ -17,9 +17,27 @@ MySQL **`boxbox_db`** mediante la cuenta restringida **`boxbox_app`**.
 Los módulos anteriores siguen disponibles en el menú lateral: pilotos, escuderías,
 mapa/circuitos, gestión de resultados, bingo y arcade.
 
-**Demo preparada:** 2024 / R1 Bahrain Grand Prix. El botón **Demo sin internet**
+**Demo preparada:** 2024 / R1 Bahrain Grand Prix. El botón **Abrir demo · Baréin 2024**
 valida e importa el paquete público local; para explorar no se necesita conexión
 a las APIs. MySQL local sí debe estar en ejecución.
+
+## Primer recorrido (sin conocimientos técnicos)
+
+1. Después de entrar, pulsa **Cómo usar BoxBox** para abrir la guía integrada.
+2. Pulsa **Abrir demo · Baréin 2024**. En Resumen selecciona un piloto: aparecen
+   su foto y los botones **Escuchar / Detener**. **Ver tiempos Q1–Q3** añade el
+   detalle de clasificación sin recargar la tabla inicial.
+3. Abre **Posiciones** y activa pilotos; pulsa un punto para consultar su evidencia.
+   En **Neumáticos**, pulsa un bloque para interpretar su stint.
+4. En **Simulador**, pulsa **Adelantar primera parada 3 vueltas** o usa las filas
+   visuales para añadir/quitar paradas y cambiar compuesto/edad. **Comparar escenarios**
+   lleva al resultado; **Restablecer** recupera la estrategia y parámetros iniciales.
+5. Desplázate dentro del módulo para ver las gráficas, tablas y supuestos completos.
+   **Añadir datos con internet** queda reservado para preparar otras selecciones.
+
+**Puntos:** ganar otorga **25** con la escala completa. En Baréin 2024, Max sumó
+además **1 por vuelta rápida**, por eso aparece `25 + 1 VR = 26`. El total oficial
+se conserva; desde 2025 no existe ese punto extra.
 
 ## Ejecutar en este equipo
 
@@ -50,6 +68,8 @@ java tools/VerifyBoxBox.java --ui --gallery
 
 Las pruebas UI abren ventanas y conservan capturas privadas. No requieren servicios
 de pago ni bibliotecas de pruebas adicionales.
+La suite actual ejecuta cinco verificadores sin UI o siete con `--ui`, incluyendo
+49 aserciones de análisis y comprobaciones de los recursos multimedia originales.
 
 ## Acceso y configuración
 
@@ -76,6 +96,9 @@ La plantilla pública sin secretos está en `database/database.properties.exampl
 - [Arquitectura y relaciones](docs/ARQUITECTURA.md)
 - [Fórmulas, supuestos, complejidad y límites](docs/MODELO_ESTRATEGIAS.md)
 - [Guion de demostración y preguntas del jurado](docs/DEMO_CONCURSO.md)
+- [Correcciones, archivos y pruebas de esta continuación](docs/INFORME_CORRECCIONES.md)
+- [Fotos, audio y video locales](docs/RECURSOS_MULTIMEDIA.md)
+- [Acceso protegido y transición de contraseñas](docs/SEGURIDAD_ACCESO.md)
 - [Rúbrica y evidencia](docs/RUBRICA_EVIDENCIA.md)
 - [Condiciones de los datos demo](datasets/LICENSE-DATA.md)
 

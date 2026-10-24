@@ -5,10 +5,11 @@ import static model.history.RaceData.*;
 
 /** Evidence-linked race narration; rule outputs never claim counterfactual causation. */
 public final class RaceInsights {
+    private final RaceScoring scoring=new RaceScoring();
     public record Insight(int lap,String driverId,String title,String evidence){public String toString(){return (lap>0?"V"+lap+" · ":"")+title+"\n"+evidence;}}
     public List<Insight> narrate(RaceData data){
         List<Insight> out=new ArrayList<>();
-        for(Entry e:data.raceEntries())if(Objects.equals(e.position(),1))out.add(new Insight(0,e.driverId(),"Resultado observado: "+e.driver()+" terminó P1","Parrilla: "+(e.grid()==null?"sin dato":e.grid()==0?"pit lane":"P"+e.grid())+"; puntos oficiales: "+e.points()+". Resultado y salida no demuestran qué decisión causó la victoria."));
+        for(Entry e:data.raceEntries())if(Objects.equals(e.position(),1))out.add(new Insight(0,e.driverId(),"Resultado observado: "+e.driver()+" terminó P1","Parrilla: "+(e.grid()==null?"sin dato":e.grid()==0?"pit lane":"P"+e.grid())+"; puntos: "+scoring.explain(data.race(),e).label()+". VR = vuelta rápida. Resultado y salida no demuestran qué decisión causó la victoria."));
         for(Stint s:data.stints())if(s.firstLap()>1){String name=data.driver(s.driverId()).map(Entry::driver).orElse(s.driverId());out.add(new Insight(s.firstLap(),s.driverId(),name+" comienza stint con "+s.compound(),"Fuente observada: stint "+s.number()+", vueltas "+s.firstLap()+"–"+s.lastLap()+", edad inicial "+(s.initialAge()==null?"desconocida":s.initialAge())+". Un stint es una tanda con un juego de neumáticos."));}
         for(Pit p:data.pits()){String name=data.driver(p.driverId()).map(Entry::driver).orElse(p.driverId());out.add(new Insight(p.lap(),p.driverId(),name+": paso por pits registrado","Tránsito/duración según fuente: "+Timing.number(p.laneSeconds())+" s; estacionario: "+Timing.number(p.stationarySeconds())+" s. No son la pérdida neta frente a permanecer en pista."));}
         for(Entry e:data.raceEntries()){

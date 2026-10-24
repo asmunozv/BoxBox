@@ -37,6 +37,7 @@ public final class AnalysisChecks {
         var max=analysis.statistics(season,"max_verstappen",false);close(max.points(),437);require(max.wins()==9&&max.podiums()==14);
         RaceScoring scoring=new RaceScoring();Entry winner=real.driver("max_verstappen").orElseThrow();
         var points=scoring.explain(race,winner);close(points.position(),25);close(points.fastestLap(),1);close(points.official(),26);require(points.label().equals("25 + 1 VR = 26"));require(winner.fastestLapRank()==1);
+        require(new RaceInsights().narrate(real).stream().anyMatch(i->i.title().startsWith("Resultado observado")&&i.evidence().contains("25 + 1 VR = 26")));
         close(scoring.explain(race,real.driver("perez").orElseThrow()).position(),18);
         RaceInfo modern=new RaceInfo("2025:1",2025,1,"SYNTHETIC_SCORING_TEST",LocalDate.of(2025,1,1),"test","test","test","test",null,null);
         close(scoring.explain(modern,entry("A",1,25,"RACE",1)).position(),25);

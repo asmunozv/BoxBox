@@ -34,6 +34,8 @@ public class MainViewController extends BorderPane implements view.DisposableVie
     private Label userLabel;
 
     private HistoricalExplorerController explorer;
+    private GuideViewController guide;
+    private final java.util.Map<Integer,Button> analysisButtons=new java.util.HashMap<>();
     @FXML private VBox analysisNavigation,legacyNavigation;
     @FXML private StackPane contentHost;
 
@@ -69,7 +71,7 @@ public class MainViewController extends BorderPane implements view.DisposableVie
         getStyleClass().add("main-view");
         seasonLabel.setText("MySQL local · boxbox_db");
         String username = UserSession.getCurrentUsername();
-        userLabel.setText("User: " + (username == null ? "-" : username));
+        userLabel.setText("Sesión: " + (username == null ? "-" : username));
         logoutButton.setOnAction(event -> {
             dispose();
             UserSession.logout();
@@ -87,11 +89,16 @@ public class MainViewController extends BorderPane implements view.DisposableVie
         tabPane.getTabs().add(miniGameTab);
         tabPane.getStyleClass().add("legacy-tabs");
         explorer = new RaceLabController();
-        Button explore = nav("Explorador histórico", () -> showContent(explorer));
+        Button explore = nav("Explorador histórico", () -> showAnalysis(0));
         explore.getStyleClass().add("nav-active");
         analysisNavigation.getChildren().add(explore);
+        analysisButtons.put(0,explore);
         String[] analysisTitles={"Comparador","Neumáticos","Paradas en pits","Evolución de posiciones","Simulador","Historia de carrera"};
-        for(int i=0;i<analysisTitles.length;i++){final int index=i+1;analysisNavigation.getChildren().add(nav(analysisTitles[i],()->{showContent(explorer);explorer.openTab(index);}));}
+        for(int i=0;i<analysisTitles.length;i++){final int index=i+1;Button button=nav(analysisTitles[i],()->showAnalysis(index));analysisNavigation.getChildren().add(button);analysisButtons.put(index,button);}
+        guide=new GuideViewController(this::showAnalysis,()->{showAnalysis(0);explorer.loadDemo();});
+        Button guideButton=nav("Cómo usar BoxBox",()->showContent(guide));analysisNavigation.getChildren().add(guideButton);
+        explorer.onGuide(()->{showContent(guide);markActive(guideButton);});
+        explorer.selectedTabIndexProperty().addListener((o,a,b)->{if(contentHost.getChildren().contains(explorer))markActive(analysisButtons.get(b.intValue()));});
         String[] titles={"Pilotos","Escuderías","Mapa y circuitos","Gestión de resultados","Bingo","Arcade"};
         for(int i=0;i<titles.length;i++){
             final int index=i;
@@ -112,6 +119,8 @@ public class MainViewController extends BorderPane implements view.DisposableVie
     }
 
     private Button nav(String text,Runnable action){Button button=new Button(text);button.getStyleClass().add("nav-item");button.setMaxWidth(Double.MAX_VALUE);button.setOnAction(e->{for(var node:analysisNavigation.getChildren())node.getStyleClass().remove("nav-active");for(var node:legacyNavigation.getChildren())node.getStyleClass().remove("nav-active");button.getStyleClass().add("nav-active");action.run();});return button;}
+    private void markActive(Button button){for(var node:analysisNavigation.getChildren())node.getStyleClass().remove("nav-active");for(var node:legacyNavigation.getChildren())node.getStyleClass().remove("nav-active");if(button!=null)button.getStyleClass().add("nav-active");}
+    private void showAnalysis(int index){showContent(explorer);explorer.openTab(index);markActive(analysisButtons.get(explorer.selectedTabIndexProperty().get()));}
     private void showContent(javafx.scene.Node content){miniGameView.onTabUnselected();if(explorer!=null)explorer.stopAudio();for(Tab tab:tabPane.getTabs())if(tab.getContent() instanceof DriverViewController drivers)drivers.dispose();contentHost.getChildren().setAll(content);FadeTransition fade=new FadeTransition(Duration.millis(160),content);fade.setFromValue(0.6);fade.setToValue(1);fade.play();}
     @Override public void dispose(){miniGameView.onTabUnselected();bingoView.dispose();for(Tab tab:tabPane.getTabs())if(tab.getContent() instanceof DriverViewController drivers)drivers.dispose();if(explorer!=null)explorer.dispose();}
 

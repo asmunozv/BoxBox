@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1" styleClass="explorer-view">
+ <center><ScrollPane fitToWidth="true" hbarPolicy="NEVER"><content><VBox spacing="18">
+  <Label text="TU PRIMERA CARRERA EN BOXBOX" styleClass="eyebrow"/>
+  <Label text="De los resultados a las decisiones" styleClass="hero-title" wrapText="true"/>
+  <Label text="Empieza con Baréin 2024. No necesitas saber de bases de datos ni escribir código: selecciona pilotos, observa los gráficos y cambia una decisión." styleClass="muted" wrapText="true"/>
+  <VBox spacing="10" styleClass="guide-card">
+   <Label text="1 · Abre una carrera verificada" styleClass="section-title"/>
+   <Label text="Abrir demo carga el paquete local en MySQL y selecciona Baréin 2024. No necesita internet. En Resumen, selecciona una fila para ver la foto del piloto, escuchar su audio y entender sus puntos." wrapText="true"/>
+   <FlowPane hgap="8" vgap="8"><Button fx:id="demo" text="Abrir demo · Baréin 2024" styleClass="danger-button"/><Button fx:id="summary" text="Ver resultados actuales"/></FlowPane>
+  </VBox>
+  <VBox spacing="10" styleClass="guide-card">
+   <Label text="2 · Entiende qué pasó" styleClass="section-title"/>
+   <Label text="En Posiciones, P1 está arriba. Activa pilotos con sus casillas y pulsa un punto para leer la vuelta; blanco indica pits. En Neumáticos, cada bloque de color es un stint. La Historia de carrera reúne eventos observados y calculados." wrapText="true"/>
+   <FlowPane hgap="8" vgap="8"><Button fx:id="positions" text="Explorar posiciones"/><Button fx:id="narrative" text="Leer historia de carrera"/></FlowPane>
+  </VBox>
+  <VBox spacing="10" styleClass="guide-card">
+   <Label text="3 · Prueba una decisión diferente" styleClass="section-title"/>
+   <Label text="En Simulador, elige un piloto y pulsa Adelantar primera parada 3 vueltas. También puedes añadir o quitar paradas y cambiar compuestos. Compara escenarios: un delta negativo indica menos tiempo en el modelo. Restablecer recupera la estrategia observada." wrapText="true"/>
+   <Button fx:id="simulation" text="Probar el simulador" styleClass="danger-button"/>
+  </VBox>
+  <TitledPane text="¿Para qué sirve cada pantalla?" expanded="false"><content><VBox spacing="10">
+   <Label text="Resumen · resultados, salida, clasificación y puntos. P1 vale 25 con la escala completa; un extra histórico de vuelta rápida se muestra separado." wrapText="true"/>
+   <Label text="Comparador · elige dos pilotos o equipos; compara la temporada local, no solo este GP. Los puntos incluyen sprint; victorias y podios, carreras principales." wrapText="true"/>
+   <Label text="Neumáticos · elige dos pilotos, pulsa un stint y compara sus tiempos. La pendiente observada no mide solamente desgaste: también influyen combustible y tráfico." wrapText="true"/>
+   <Label text="Paradas · compara vueltas de entrada y duraciones. Tránsito por pit lane, tiempo estacionario y pérdida neta son cosas distintas." wrapText="true"/>
+   <Label text="Fuentes y cobertura · consulta proveedor, URL, fecha de preparación y huella de cada instantánea." wrapText="true"/>
+  </VBox></content></TitledPane>
+  <TitledPane text="Glosario rápido" expanded="false"><content><VBox spacing="10">
+   <Label text="Stint · tanda de vueltas con un juego de neumáticos. Compuesto · tipo de goma: SOFT = blando/rojo, MEDIUM = medio/amarillo, HARD = duro/blanco." wrapText="true"/>
+   <Label text="Edad inicial · vueltas que ya tenía ese juego al comenzar la tanda. Un juego usado no vuelve a edad cero." wrapText="true"/>
+   <Label text="Undercut · parar antes que un rival para intentar ganar tiempo con neumáticos nuevos. Overcut · quedarse más tiempo en pista e intentar ganar tiempo antes de parar. Un cambio de orden por sí solo no demuestra ninguna de estas causas." wrapText="true"/>
+   <Label text="Degradación · aumento de tiempo supuesto por cada vuelta de edad del neumático. Delta · tiempo alternativo menos tiempo histórico modelado: negativo = alternativa más rápida; positivo = más lenta." wrapText="true"/>
+  </VBox></content></TitledPane>
+  <TitledPane text="¿Y si faltan datos o quiero otra temporada?" expanded="false"><content><VBox spacing="10">
+   <Label text="Elige temporada y GP arriba del explorador. Si no están preparados, abre Añadir datos con internet: prepara primero la temporada y luego sus vueltas y estrategia. Esta descarga es explícita; después se explora desde MySQL local." wrapText="true"/>
+   <Label text="El paquete demo tiene resultados de toda 2024, pero el detalle de neumáticos y vueltas está preparado para Baréin. Otras carreras pueden mostrar un estado sin detalle; no es un resultado cero." wrapText="true"/>
+   <Label text="Observado = dato de la fuente. Calculado = operación reproducible sobre esos datos. Estimado = resultado del modelo bajo supuestos. La simulación no garantiza una posición final ni reproduce tráfico, clima o decisiones de rivales." wrapText="true"/>
+  </VBox></content></TitledPane>
+  <Label text="Tus pantallas anteriores siguen en la barra lateral: Pilotos, Escuderías, Mapa y circuitos, Gestión de resultados, Bingo y Arcade." styleClass="muted" wrapText="true"/>
+  <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+ </VBox></content></ScrollPane></center>
+</fx:root>

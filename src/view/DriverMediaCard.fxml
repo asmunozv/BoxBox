@@ -7,5 +7,5 @@
     <Label fx:id="detailLabel" styleClass="muted" wrapText="true"/>
     <Label fx:id="mediaStatus" styleClass="coverage-label" wrapText="true"/>
   </VBox>
-  <VBox spacing="5"><Button fx:id="playButton" text="Escuchar" accessibleText="Escuchar audio local del piloto"/><Button fx:id="stopButton" text="Detener" disable="true"/></VBox>
+  <VBox spacing="5" minWidth="92" prefWidth="92"><Button fx:id="playButton" text="Escuchar" minWidth="92" maxWidth="Infinity" accessibleText="Escuchar audio local del piloto"/><Button fx:id="stopButton" text="Detener" minWidth="92" maxWidth="Infinity" disable="true"/></VBox>
 </fx:root>

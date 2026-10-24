@@ -28,7 +28,8 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
     @FXML ComboBox<RaceInfo> raceCombo;
     @FXML ComboBox<String> driverFilter,teamFilter,sessionFilter;
     @FXML TextField searchField;
-    @FXML Button seasonImportButton,raceImportButton,demoButton;
+    @FXML CheckBox qualifyingDetails;
+    @FXML Button seasonImportButton,raceImportButton,demoButton,helpButton;
     @FXML ProgressIndicator loading;
     @FXML Label statusLabel,titleLabel,circuitLabel,coverageLabel,winnerValue,entriesValue,lapsValue,qualifyingValue,summaryLabel,pointsLabel;
     @FXML TableView<Entry> resultsTable;
@@ -50,9 +51,11 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         column("Pos.",e->e.position()==null?"—":"P"+e.position(),55);
         column("Piloto",Entry::driver,170);column("Escudería",Entry::team,150);
         column("Salida",e->e.grid()==null?"—":e.grid()==0?"Pit lane":"P"+e.grid(),75);
-        column("Puntos · VR = extra",e->scoring.explain(data.race(),e).label(),135);
+        column("Puntos",e->data==null?RaceScoring.number(e.points()):scoring.explain(data.race(),e).label(),135);
         column("Clasif.",e->e.qualifying()==null?"—":"P"+e.qualifying(),65);
-        column("Q1",e->Timing.format(e.q1()),90);column("Q2",e->Timing.format(e.q2()),90);column("Q3",e->Timing.format(e.q3()),90);
+        column("Q1",e->Timing.format(e.q1()),90).visibleProperty().bind(qualifyingDetails.selectedProperty());
+        column("Q2",e->Timing.format(e.q2()),90).visibleProperty().bind(qualifyingDetails.selectedProperty());
+        column("Q3",e->Timing.format(e.q3()),90).visibleProperty().bind(qualifyingDetails.selectedProperty());
         column("Vueltas",e->""+e.completedLaps(),60);column("Estado",Entry::status,130);
         resultsTable.setPlaceholder(new Label("Sin resultados locales para esta selección. Prepara la carrera para comenzar."));
         resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
@@ -62,15 +65,17 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         searchField.textProperty().addListener((o,a,b)->filter());
         seasonCombo.setOnAction(e->{if(!selecting)selectSeason();});raceCombo.setOnAction(e->{if(!busy.get()&&!selecting)loadRace();});
         seasonImportButton.setOnAction(e->prepareSeason());raceImportButton.setOnAction(e->prepareRace());
-        demoButton.setOnAction(e->job("Cargando demostración local, sin HTTP…",()->new DemoArchive().importFile(java.nio.file.Path.of("datasets/demo-2024.json")),count->{service.invalidate();selecting=true;seasonCombo.setValue(2024);raceCombo.setValue(null);selecting=false;refresh();}));
+        demoButton.setTooltip(new Tooltip("Carga datos locales de Baréin 2024 sin internet. Requiere MySQL local."));
+        demoButton.setOnAction(e->loadDemo());
         refresh();
     }
-    void column(String title,Function<Entry,String> value,double width){TableColumn<Entry,String> c=new TableColumn<>(title);c.setPrefWidth(width);c.setCellValueFactory(x->new SimpleStringProperty(value.apply(x.getValue())));resultsTable.getColumns().add(c);}
+    TableColumn<Entry,String> column(String title,Function<Entry,String> value,double width){TableColumn<Entry,String> c=new TableColumn<>(title);c.setPrefWidth(width);c.setCellValueFactory(x->new SimpleStringProperty(value.apply(x.getValue())));resultsTable.getColumns().add(c);return c;}
     void refresh(){
         job("Consultando archivo local…",()->service.races(),rows->{calendar=rows;Integer previous=seasonCombo.getValue();selecting=true;seasonCombo.setValue(previous!=null?previous:rows.isEmpty()?LocalDate.now().getYear():rows.get(0).season());selecting=false;selectSeason();});
     }
-    private void selectSeason(){if(busy.get()||seasonCombo.getValue()==null)return;int year=seasonCombo.getValue();RaceInfo previous=raceCombo.getValue();List<RaceInfo> races=calendar.stream().filter(r->r.season()==year).sorted(Comparator.comparingInt(RaceInfo::round)).toList();selecting=true;raceCombo.getItems().setAll(races);if(!races.isEmpty())raceCombo.setValue(races.stream().filter(r->previous!=null&&r.key().equals(previous.key())).findFirst().orElse(races.get(0)));selecting=false;if(!races.isEmpty())loadRace();else{data=null;resultsTable.getItems().clear();titleLabel.setText("Prepara una temporada histórica");circuitLabel.setText("Selecciona un año y pulsa Preparar temporada. Después, la navegación funciona con MySQL local.");coverageLabel.setText("Sin calendario local para "+year);resetMetrics();}}
-    private void loadRace(){RaceInfo race=raceCombo.getValue();if(race==null)return;job("Leyendo carrera y temporada desde MySQL…",()->new Loaded(service.race(race),service.season(race.season())),loaded->{data=loaded.race;seasonData=loaded.season;render();});}
+    private void selectSeason(){if(busy.get()||seasonCombo.getValue()==null)return;int year=seasonCombo.getValue();RaceInfo previous=raceCombo.getValue();List<RaceInfo> races=calendar.stream().filter(r->r.season()==year).sorted(Comparator.comparingInt(RaceInfo::round)).toList();selecting=true;raceCombo.getItems().setAll(races);if(!races.isEmpty())raceCombo.setValue(races.stream().filter(r->previous!=null&&r.key().equals(previous.key())).findFirst().orElse(races.get(0)));selecting=false;if(!races.isEmpty())loadRace();else{clearRace();titleLabel.setText("Esta temporada aún no está preparada");circuitLabel.setText("Abre la demo local o despliega Añadir datos con internet para preparar otra temporada.");coverageLabel.setText("Sin calendario local para "+year);}}
+    private void loadRace(){RaceInfo race=raceCombo.getValue();if(race==null||busy.get())return;clearRace();titleLabel.setText(race.name()+" · "+race.season());circuitLabel.setText("Cargando esta selección desde el archivo local…");job("Leyendo carrera y temporada desde MySQL…",()->new Loaded(service.race(race),service.season(race.season())),loaded->{data=loaded.race;seasonData=loaded.season;render();});}
+    private void clearRace(){data=null;seasonData=List.of();resultsTable.getItems().clear();sourcesList.getItems().clear();driverFilter.getItems().setAll("Todos los pilotos");driverFilter.setValue("Todos los pilotos");teamFilter.getItems().setAll("Todas las escuderías");teamFilter.setValue("Todas las escuderías");driverMedia.setEntry(null);coverageLabel.setText("Sin observaciones cargadas para esta selección.");resetMetrics();onRaceChanged();}
     private record Loaded(RaceData race,List<RaceData> season){}
     void render(){
         titleLabel.setText(data.race().name()+" · "+data.race().season());
@@ -78,7 +83,7 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
         driverFilter.getItems().setAll("Todos los pilotos");driverFilter.getItems().addAll(data.raceEntries().stream().map(Entry::driver).distinct().sorted().toList());driverFilter.setValue("Todos los pilotos");
         teamFilter.getItems().setAll("Todas las escuderías");teamFilter.getItems().addAll(data.raceEntries().stream().map(Entry::team).distinct().sorted().toList());teamFilter.setValue("Todas las escuderías");
         entriesValue.setText(""+data.raceEntries().size());lapsValue.setText(""+data.lapCount());
-        winnerValue.setText(data.raceEntries().stream().filter(e->Objects.equals(e.position(),1)).map(Entry::driver).findFirst().orElse("Sin resultados"));
+        winnerValue.setText("Ganador observado: "+data.raceEntries().stream().filter(e->Objects.equals(e.position(),1)).map(Entry::driver).findFirst().orElse("Sin resultados"));
         qualifyingValue.setText(data.raceEntries().stream().filter(e->e.qualifying()!=null).count()+" / "+data.raceEntries().size());
         long prepared=seasonData.stream().filter(d->!d.raceEntries().isEmpty()).count();
         coverageLabel.setText("Archivo local · "+prepared+"/"+seasonData.size()+" carreras con resultados en la temporada · "+data.laps().size()+" tiempos/posiciones por vuelta · "+data.stints().size()+" stints");
@@ -96,7 +101,10 @@ public class HistoricalExplorerController extends BorderPane implements view.Dis
     }
     private void showPoints(Entry entry){driverMedia.setEntry(entry);pointsLabel.setText(data==null||entry==null?"Selecciona una fila para entender el desglose de puntos.":scoring.explain(data.race(),entry).explanation());}
     protected void onRaceChanged(){}
-    public void openTab(int index){analysisTabs.getSelectionModel().select(index);}
+    public void openTab(int index){if(index>=0&&index<analysisTabs.getTabs().size()&&!analysisTabs.getTabs().get(index).isDisable())analysisTabs.getSelectionModel().select(index);else statusLabel.setText("Selecciona una carrera preparada o abre la demo para analizarla.");}
+    public javafx.beans.property.ReadOnlyIntegerProperty selectedTabIndexProperty(){return analysisTabs.getSelectionModel().selectedIndexProperty();}
+    public void onGuide(Runnable action){helpButton.setOnAction(e->action.run());}
+    public void loadDemo(){openTab(0);job("Cargando demostración local, sin HTTP…",()->new DemoArchive().importFile(model.util.LocalResources.projectRoot().resolve("datasets/demo-2024.json")),count->{service.invalidate();selecting=true;seasonCombo.setValue(2024);raceCombo.setValue(null);searchField.clear();sessionFilter.setValue("Carrera");selecting=false;refresh();});}
     public void prepareSeason(){Integer year=seasonCombo.getValue();if(year==null)return;importJob("Preparando temporada…",p->importer.season(year,p));}
     public void prepareRace(){RaceInfo race=raceCombo.getValue();if(race==null){statusLabel.setText("Prepara primero el calendario de la temporada.");return;}importJob("Preparando carrera…",p->importer.detail(race,p));}
     private void importJob(String message,Importer operation){

@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.scene.chart.*?><?import javafx.geometry.Insets?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
- <top><VBox spacing="10">
-  <Label text="Strategy lab · ¿y si hubieras parado antes?" styleClass="section-title"/>
-  <FlowPane hgap="8" vgap="8"><ComboBox fx:id="driver" prefWidth="220"/><ComboBox fx:id="initial" prefWidth="110"/><Label text="Edad inicial"/><Spinner fx:id="age" prefWidth="85"/><Label text="Paradas vuelta:compuesto[:edad]"/><TextField fx:id="stops" prefWidth="230"/><Button fx:id="calculate" text="Comparar escenarios" styleClass="danger-button"/></FlowPane>
-  <Label fx:id="historicalLabel" wrapText="true" styleClass="coverage-label"/>
-  <FlowPane hgap="8" vgap="8">
-   <VBox><Label text="Degradación estimada s/v" styleClass="stat-caption"/><TextField fx:id="degradation" prefWidth="105"/></VBox>
-   <VBox><Label text="Pérdida neta pits s" styleClass="stat-caption"/><TextField fx:id="pitLoss" prefWidth="105"/></VBox>
-   <VBox><Label text="Combustible estimado s/v" styleClass="stat-caption"/><TextField fx:id="fuel" prefWidth="105"/></VBox>
-   <VBox><Label text="Calentamiento s" styleClass="stat-caption"/><TextField fx:id="warmup" prefWidth="95"/></VBox>
-   <VBox><Label text="Efecto SOFT s" styleClass="stat-caption"/><TextField fx:id="softEffect" prefWidth="85"/></VBox>
-   <VBox><Label text="Efecto MEDIUM s" styleClass="stat-caption"/><TextField fx:id="mediumEffect" prefWidth="85"/></VBox>
-   <VBox><Label text="Efecto HARD s" styleClass="stat-caption"/><TextField fx:id="hardEffect" prefWidth="85"/></VBox>
+ <center><VBox spacing="12">
+  <Label text="Simulador · cambia una decisión" styleClass="section-title"/>
+  <Label text="1. Elige piloto. 2. Modifica sus paradas. 3. Compara el tiempo estimado. Empieza con Adelantar primera parada 3 vueltas." styleClass="muted" wrapText="true"/>
+  <FlowPane hgap="10" vgap="8">
+   <VBox spacing="4"><Label text="Piloto" styleClass="stat-caption"/><ComboBox fx:id="driver" prefWidth="220" accessibleText="Piloto del experimento"/></VBox>
+   <VBox spacing="4"><Label text="Neumático de salida alternativo" styleClass="stat-caption"/><ComboBox fx:id="initial" prefWidth="185" accessibleText="Compuesto inicial alternativo"/></VBox>
+   <VBox spacing="4"><Label text="Edad inicial (vueltas ya usadas)" styleClass="stat-caption"/><Spinner fx:id="age" prefWidth="105"/></VBox>
   </FlowPane>
-  <TitledPane text="Cómo se obtienen los parámetros iniciales" expanded="false"><content><Label fx:id="evidence" wrapText="true" styleClass="muted"/></content></TitledPane>
- </VBox></top>
- <center><VBox spacing="8"><Label fx:id="resultLabel" wrapText="true" styleClass="explanation-card"/><LineChart fx:id="deltaChart" title="Alternativa − histórica modelada" minHeight="240" VBox.vgrow="ALWAYS"><xAxis><NumberAxis label="Vuelta" forceZeroInRange="false"/></xAxis><yAxis><NumberAxis label="Δ tiempo (s)"/></yAxis></LineChart></VBox></center>
- <bottom><TitledPane text="Supuestos, legalidad y límites del experimento" expanded="false"><content><Label fx:id="limitations" wrapText="true" styleClass="muted"/></content></TitledPane></bottom>
+  <Label fx:id="historicalLabel" wrapText="true" styleClass="coverage-label"/>
+  <VBox fx:id="stopRows" spacing="6"/>
+  <FlowPane hgap="8" vgap="6"><Button fx:id="addStop" text="+ Añadir parada"/><Button fx:id="noStops" text="Probar sin paradas"/><Button fx:id="earlier" text="Adelantar primera parada 3 vueltas"/><Button fx:id="reset" text="Restablecer"/></FlowPane>
+  <FlowPane hgap="12" vgap="8">
+   <VBox spacing="4"><Label text="Degradación estimada (s/vuelta de edad)" styleClass="stat-caption"/><TextField fx:id="degradation" prefWidth="155" maxWidth="190"/></VBox>
+   <VBox spacing="4"><Label text="Pérdida neta por parada (segundos)" styleClass="stat-caption"/><TextField fx:id="pitLoss" prefWidth="155" maxWidth="190"/></VBox>
+   <Button fx:id="calculate" text="Comparar escenarios" styleClass="danger-button"/>
+  </FlowPane>
+  <VBox fx:id="resultCard" spacing="5" styleClass="explanation-card">
+   <Label text="DIFERENCIA ESTIMADA · ALTERNATIVA − HISTÓRICA MODELADA" styleClass="stat-caption" wrapText="true"/>
+   <Label fx:id="deltaValue" text="—" styleClass="stat-value"/>
+   <Label fx:id="interpretation" wrapText="true"/>
+   <Label fx:id="resultLabel" wrapText="true" styleClass="muted"/>
+  </VBox>
+  <LineChart fx:id="deltaChart" title="Diferencia acumulada · bajo cero = alternativa más rápida" minHeight="245" prefHeight="245"><xAxis><NumberAxis label="Vuelta" forceZeroInRange="false"/></xAxis><yAxis><NumberAxis label="Δ tiempo (s)"/></yAxis></LineChart>
+  <TitledPane text="Parámetros avanzados y precisión descriptiva" expanded="false"><content><VBox spacing="10">
+   <Label text="Son supuestos editables, no mediciones causales del neumático. Se aplican igual a ambas estrategias." wrapText="true" styleClass="muted"/>
+   <FlowPane hgap="10" vgap="8">
+    <VBox spacing="4"><Label text="Combustible (s/v)" styleClass="stat-caption"/><TextField fx:id="fuel" prefWidth="110"/></VBox>
+    <VBox spacing="4"><Label text="Calentamiento (s)" styleClass="stat-caption"/><TextField fx:id="warmup" prefWidth="110"/></VBox>
+    <VBox spacing="4"><Label text="Efecto blandos (s)" styleClass="stat-caption"/><TextField fx:id="softEffect" prefWidth="110"/></VBox>
+    <VBox spacing="4"><Label text="Efecto medios (s)" styleClass="stat-caption"/><TextField fx:id="mediumEffect" prefWidth="110"/></VBox>
+    <VBox spacing="4"><Label text="Efecto duros (s)" styleClass="stat-caption"/><TextField fx:id="hardEffect" prefWidth="110"/></VBox>
+   </FlowPane>
+   <Label fx:id="diagnostics" wrapText="true" styleClass="muted"/>
+  </VBox></content></TitledPane>
+  <TitledPane text="Cómo se estiman los parámetros iniciales" expanded="false"><content><Label fx:id="evidence" wrapText="true" styleClass="muted"/></content></TitledPane>
+  <TitledPane text="Supuestos y límites del experimento" expanded="false"><content><Label fx:id="limitations" wrapText="true" styleClass="muted"/></content></TitledPane>
+  <TitledPane text="Edición técnica de paradas (opcional)" expanded="false"><content><VBox spacing="6"><Label text="vuelta:COMPUESTO:edad; por ejemplo 14:HARD:0;37:SOFT:0. También puedes usar los controles de arriba. Tras editar aquí, pulsa Comparar para actualizar las filas." wrapText="true" styleClass="muted"/><TextField fx:id="stops"/></VBox></content></TitledPane>
+  <padding><Insets top="10" right="12" bottom="16" left="0"/></padding>
+ </VBox></center>
 </fx:root>

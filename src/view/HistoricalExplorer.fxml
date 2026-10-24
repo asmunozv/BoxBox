@@ -5,44 +5,45 @@
 <?import controller.DriverMediaCard?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1" styleClass="explorer-view">
   <top>
-    <VBox spacing="12">
-      <Label text="RACE EXPLORER" styleClass="eyebrow"/>
+    <VBox spacing="7">
       <Label fx:id="titleLabel" text="La historia detrás de cada vuelta" styleClass="hero-title"/>
       <Label fx:id="circuitLabel" text="Explora datos históricos preparados y aprende a leer una carrera." wrapText="true" styleClass="muted"/>
       <FlowPane hgap="10" vgap="8">
-        <ComboBox fx:id="seasonCombo" prefWidth="100" accessibleText="Temporada"/>
-        <ComboBox fx:id="raceCombo" prefWidth="310" promptText="Gran Premio" accessibleText="Gran Premio"/>
-        <Button fx:id="seasonImportButton" text="Preparar temporada" styleClass="secondary-button"/>
-        <Button fx:id="raceImportButton" text="Preparar vueltas y estrategia" styleClass="danger-button"/>
-        <Button fx:id="demoButton" text="Demo sin internet"/>
+        <ComboBox fx:id="seasonCombo" prefWidth="85" accessibleText="Temporada"/>
+        <ComboBox fx:id="raceCombo" prefWidth="240" promptText="Gran Premio" accessibleText="Gran Premio"/>
+        <Button fx:id="demoButton" text="Abrir demo · Baréin 2024" styleClass="danger-button"/>
+        <Button fx:id="helpButton" text="Cómo usar BoxBox"/>
         <ProgressIndicator fx:id="loading" prefWidth="24" prefHeight="24"/>
       </FlowPane>
+      <TitledPane text="Añadir datos con internet" expanded="false"><content><FlowPane hgap="10" vgap="8"><Button fx:id="seasonImportButton" text="1. Preparar temporada"/><Button fx:id="raceImportButton" text="2. Preparar vueltas y estrategia"/><Label text="Solo para nuevas selecciones. La demo ya incluye Baréin 2024." wrapText="true" styleClass="muted"/></FlowPane></content></TitledPane>
       <Label fx:id="statusLabel" wrapText="true" styleClass="status-message"/>
     </VBox>
   </top>
   <center>
     <TabPane fx:id="analysisTabs" tabClosingPolicy="UNAVAILABLE" styleClass="analysis-tabs">
       <Tab text="Resumen">
-        <BorderPane>
+         <ScrollPane fitToWidth="true" hbarPolicy="NEVER"><content><BorderPane minHeight="490">
           <top><VBox spacing="12">
             <FlowPane hgap="12" vgap="10">
-              <VBox styleClass="stat-card" prefWidth="230"><Label text="GANADOR OBSERVADO" styleClass="stat-caption"/><Label fx:id="winnerValue" text="—" styleClass="stat-name"/></VBox>
-              <VBox styleClass="stat-card" prefWidth="130"><Label text="PILOTOS" styleClass="stat-caption"/><Label fx:id="entriesValue" text="—" styleClass="stat-value"/></VBox>
-              <VBox styleClass="stat-card" prefWidth="130"><Label text="VUELTAS" styleClass="stat-caption"/><Label fx:id="lapsValue" text="—" styleClass="stat-value"/></VBox>
-              <VBox styleClass="stat-card" prefWidth="160"><Label text="CON CLASIFICACIÓN" styleClass="stat-caption"/><Label fx:id="qualifyingValue" text="—" styleClass="stat-value"/></VBox>
-            </FlowPane>
+               <DriverMediaCard fx:id="driverMedia" prefWidth="335"/>
+               <VBox styleClass="stat-card" prefWidth="95"><Label text="PILOTOS" styleClass="stat-caption"/><Label fx:id="entriesValue" text="—" styleClass="stat-value"/></VBox>
+               <VBox styleClass="stat-card" prefWidth="95"><Label text="VUELTAS" styleClass="stat-caption"/><Label fx:id="lapsValue" text="—" styleClass="stat-value"/></VBox>
+               <VBox styleClass="stat-card" prefWidth="145"><Label text="CON CLASIFICACIÓN" styleClass="stat-caption"/><Label fx:id="qualifyingValue" text="—" styleClass="stat-value"/></VBox>
+             </FlowPane>
+             <Label fx:id="winnerValue" text="—" styleClass="muted"/>
             <Label fx:id="coverageLabel" text="Archivo local sin preparar" wrapText="true" styleClass="coverage-label"/>
             <FlowPane hgap="8" vgap="8">
               <ComboBox fx:id="sessionFilter" prefWidth="110"/>
               <ComboBox fx:id="driverFilter" prefWidth="190"/>
               <ComboBox fx:id="teamFilter" prefWidth="190"/>
-              <TextField fx:id="searchField" promptText="Buscar piloto, equipo, código o estado…" prefWidth="270"/>
+               <TextField fx:id="searchField" promptText="Buscar piloto, equipo, código o estado…" prefWidth="270"/>
+               <CheckBox fx:id="qualifyingDetails" text="Ver tiempos Q1–Q3"/>
             </FlowPane>
           </VBox></top>
-          <center><TableView fx:id="resultsTable"/></center>
-           <bottom><VBox spacing="6"><DriverMediaCard fx:id="driverMedia"/><Label fx:id="pointsLabel" wrapText="true" styleClass="explanation-card"/><Label fx:id="summaryLabel" wrapText="true" styleClass="muted"/></VBox></bottom>
+           <center><TableView fx:id="resultsTable" minHeight="200" prefHeight="255"/></center>
+           <bottom><VBox spacing="6"><Label fx:id="pointsLabel" wrapText="true" styleClass="explanation-card"/><Label fx:id="summaryLabel" wrapText="true" styleClass="muted"/></VBox></bottom>
           <padding><Insets top="14"/></padding>
-        </BorderPane>
+         </BorderPane></content></ScrollPane>
       </Tab>
       <Tab text="Fuentes y cobertura"><VBox spacing="12"><Label text="Evidencia de cada instantánea" styleClass="section-title"/><Label text="Las instantáneas son inmutables. Preparar añade datos faltantes; no reemplaza registros existentes. Las consultas de esta pantalla se resuelven desde MySQL." wrapText="true" styleClass="muted"/><ListView fx:id="sourcesList" VBox.vgrow="ALWAYS"/></VBox></Tab>
     </TabPane>

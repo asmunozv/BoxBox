@@ -4,7 +4,7 @@
 
 1. Iniciar MySQL80 y ejecutar `BoxBox.launch` en Eclipse (JDK 26, objetivo 25).
 2. Entrar con una cuenta de aplicación existente. No usar boxbox_app como login UI.
-3. Pulsar **Demo sin internet**. Lee `datasets/demo-2024.json`, valida sus huellas
+3. Abrir **Cómo usar BoxBox** y pulsar **Abrir demo · Baréin 2024**. Lee `datasets/demo-2024.json`, valida sus huellas
    y añade solo documentos faltantes en MySQL. No hace llamadas HTTP.
 4. Selección: temporada 2024, R1 Bahrain Grand Prix.
 
@@ -21,12 +21,19 @@ carreras utiliza internet una vez y después deja sus observaciones en MySQL.
 | 1:20–2:10 | Neumáticos | Max: SOFT 1–17, HARD 18–37, SOFT 38–57; juego inicial ya usado (edad 3) |
 | 2:10–2:50 | Pits | Tránsito separado del estacionario; este último no disponible para Baréin 2024 |
 | 2:50–3:30 | Comparador | Temporada completa preparada; Max 437 puntos, 9 victorias, 14 podios; muestras visibles |
-| 3:30–4:40 | Simulador | Cambiar primera parada 17→14; variar degradación; observar delta y sensibilidad |
+| 3:30–4:40 | Simulador | Pulsar Adelantar primera parada 3 vueltas (17→14); variar degradación; observar delta y sensibilidad |
 | 4:40–5:00 | Supuestos y procedencia | Qué está observado, calculado o estimado y qué no permite concluir |
 
-Para el experimento, la sintaxis permite `14:HARD:0;37:SOFT:0`. También admite
-cero o varias paradas, con validación. Los coeficientes son aproximados/editables.
+El experimento usa filas visuales para vuelta, compuesto y edad del juego;
+**Añadir parada**, **Quitar**, **Probar sin paradas** y **Restablecer** realizan
+acciones reales. El resultado se enfoca automáticamente al comparar.
+La sintaxis `14:HARD:0;37:SOFT:0` sigue disponible en **Edición técnica de paradas**,
+pero no es necesaria para usar el simulador. Los coeficientes son aproximados/editables.
 No prometer que adelantar una parada habría cambiado de manera exacta la posición final.
+
+En Resumen, seleccionar una fila también muestra la fotografía y **Escuchar / Detener**.
+Estos medios pertenecen a la colección local del proyecto; no son evidencia temporal
+de la carrera. En ventanas pequeñas, usar el desplazamiento vertical de cada módulo.
 
 ### Por qué aparecen 26 puntos en Baréin 2024
 

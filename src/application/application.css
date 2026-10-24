@@ -242,3 +242,11 @@
 .titled-pane > .title { -fx-background-color: #18253a; -fx-padding: 8; }
 .titled-pane > .content { -fx-background-color: #101a2b; -fx-border-color: #293851; -fx-padding: 10; }
 .driver-media-card { -fx-background-color: #131d2e; -fx-background-radius: 8; -fx-padding: 10 12; }
+.guide-card { -fx-background-color: #131d2e; -fx-border-color: #293851; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 18; }
+.stop-editor-row { -fx-background-color: #131d2e; -fx-background-radius: 6; -fx-padding: 8; -fx-alignment: CENTER_LEFT; }
+.default-color0.chart-series-line { -fx-stroke: #ff667c; }
+.default-color1.chart-series-line { -fx-stroke: #6bc5ff; }
+.default-color0.chart-line-symbol { -fx-background-color: #ff667c, #101827; }
+.default-color1.chart-line-symbol { -fx-background-color: #6bc5ff, #101827; }
+.default-color0.chart-bar { -fx-bar-fill: #ff667c; }
+.default-color1.chart-bar { -fx-bar-fill: #6bc5ff; }

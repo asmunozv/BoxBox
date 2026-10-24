@@ -33,10 +33,11 @@ public final class LocalImageService {
         }
         // An original, neutral silhouette, rather than an unrelated or unverified photograph.
         WritableImage image=new WritableImage(64,64);
+        Color foreground=Color.web("#8295b2"),background=Color.web("#18253a");
         for(int y=0;y<64;y++)for(int x=0;x<64;x++) {
             boolean head=(x-32)*(x-32)+(y-22)*(y-22)<90;
             boolean body=y>36&&(x-32)*(x-32)+(y-64)*(y-64)<650;
-            image.getPixelWriter().setColor(x,y,head||body?Color.web("#8295b2"):Color.web("#18253a"));
+            image.getPixelWriter().setColor(x,y,head||body?foreground:background);
         }
         return image;
     }

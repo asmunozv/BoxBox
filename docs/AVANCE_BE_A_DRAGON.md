@@ -31,9 +31,9 @@ La copia anterior de boxbox_db se conserva en
 `private/backups/antes-historial-e1e62560-b082-438d-817e-ff40e9aa606b/`.
 Los archivos del proyecto original se comprobaron sin cambios.
 
-## Continuación de esta sesión
+## Entregas analíticas anteriores
 
-Entregas implementadas y verificadas en esta sesión:
+Entregas implementadas y verificadas durante el desarrollo anterior:
 
 - Comparador piloto/escudería, métricas, curva de puntos y tabla por GP.
 - Líneas de stints, muestras de ritmo y pendiente observada.
@@ -45,7 +45,7 @@ Entregas implementadas y verificadas en esta sesión:
 - PBKDF2 y autenticación de fondo; transición aditiva sin sobrescribir contraseñas antiguas.
 - Ciclo de vida para medios/animaciones, tema compartido y menú lateral desplazable.
 
-Pruebas ejecutadas: 36 aserciones de cálculo/modelo y contraste real; seguridad
+Pruebas registradas en aquella entrega: 36 aserciones de cálculo/modelo y contraste real; seguridad
 criptográfica; servidor HTTP de prueba con paginación completa/incompleta; rollback
 de persistencia por FK inválida; importación demo idempotente; prueba JavaFX del
 explorador y módulos analíticos; regresión de las seis funciones anteriores,
@@ -69,6 +69,36 @@ No se actualizó la tecnología ni se silenciaron errores para declarar éxito.
 Las tablas nuevas se prepararon con la migración aditiva
 `database/migrations/V001__historical_archive.sql`, y permisos SELECT/INSERT
 específicos para boxbox_app. La cuenta de aplicación continúa sin privilegios DDL.
+
+## Correcciones comprobadas — 23 de octubre de 2026
+
+Punto de recuperación de esta continuación: `fc1fa5d`. Corrección de puntuación:
+`22c0c86`. Integración multimedia: `77e877f`.
+
+- Desglose de puntuación: **25 por P1 + 1 VR = 26** en Baréin 2024, con rango de
+  vuelta rápida de la fuente; no se impone el extra desde 2025 ni se reescriben
+  puntos reducidos/históricos sin evidencia.
+- Fotos y audios originales integrados en el explorador; resolución independiente
+  del directorio de lanzamiento y alias de pilotos. Ausencias locales informativas.
+- Guía integrada con botones a demo, resultados, posiciones, historia y simulación.
+- Editor visual de paradas, adelanto de tres vueltas, restablecimiento, cero paradas,
+  coma decimal y resultados con interpretación sencilla y enfoque automático.
+- Comparador con las ocho métricas legibles, selección inicial de líderes del GP,
+  tablas/gráficas desplazables y ejes de rondas enteras. Navegación sincronizada.
+- Temporadas sin datos limpian el contexto anterior y deshabilitan sus análisis;
+  la demo permite recuperarse de ese estado.
+
+Ejecución actual: **84 fuentes compiladas**, **49 aserciones analíticas**, y
+**siete verificadores satisfactorios** con `java tools/VerifyBoxBox.java --ui --gallery`.
+Se decodificaron **22 fotografías** y resolvieron **22 audios** de pilotos; el audio
+de Max y el audio/video del login alcanzaron PLAYING. Los controles guiados,
+filtros, demo, perfiles, clasificaciones, mapa, bingo cargado, arcade y logout
+pasaron las comprobaciones JavaFX. Capturas revisadas a 1280×800 y 1000×650.
+
+El detalle de comandos, archivos, resultados y límites está en
+[INFORME_CORRECCIONES.md](INFORME_CORRECCIONES.md). El registro anterior de pruebas
+CRUD y de igualdad completa con respaldos no se presenta como una nueva ejecución
+de esta continuación.
 
 ## Fuentes y límites de interpretación
 
