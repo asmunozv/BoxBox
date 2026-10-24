@@ -29,7 +29,7 @@ public final class HistoryParser {
         for(Document d:documents)if(Set.of("RESULTS","SPRINT").contains(d.kind())){
             String session=d.kind().equals("SPRINT")?"SPRINT":"RACE",field=session.equals("RACE")?"Results":"SprintResults";
             for(JsonObject r:raceObjects(d.payload()))for(JsonElement value:array(r,field)){
-                JsonObject x=value.getAsJsonObject(),driver=object(x,"Driver"),team=object(x,"Constructor"),q=qualifying.get(text(driver,"driverId"));
+                JsonObject x=value.getAsJsonObject(),driver=object(x,"Driver"),team=object(x,"Constructor"),q=session.equals("RACE")?qualifying.get(text(driver,"driverId")):null;
                 String id=Objects.requireNonNull(text(driver,"driverId"));Double points=decimal(x,"points");if(points==null||points<0)throw new IllegalArgumentException("Puntos oficiales ausentes o inválidos.");
                 Double millis=decimal(object(x,"Time"),"millis");Integer number=integer(x,"number"),completed=integer(x,"laps");
                 Entry e=new Entry(id,or(text(driver,"givenName"),"")+" "+or(text(driver,"familyName"),""),or(text(driver,"code"),id),number==null?0:number,
