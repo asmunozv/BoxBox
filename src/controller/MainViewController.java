@@ -17,7 +17,7 @@ import javafx.animation.FadeTransition;
 import javafx.util.Duration;
 import view.SeasonContext;
 
-public class MainViewController extends BorderPane {
+public class MainViewController extends BorderPane implements view.DisposableView {
 
     private final DataImportController dataImportController;
     private final RaceViewController raceView;
@@ -71,6 +71,7 @@ public class MainViewController extends BorderPane {
         String username = UserSession.getCurrentUsername();
         userLabel.setText("User: " + (username == null ? "-" : username));
         logoutButton.setOnAction(event -> {
+            dispose();
             UserSession.logout();
             if (onLogout != null) {
                 onLogout.run();
@@ -87,8 +88,9 @@ public class MainViewController extends BorderPane {
         tabPane.getStyleClass().add("legacy-tabs");
         explorer = new RaceLabController();
         Button explore = nav("Explorador histórico", () -> showContent(explorer));
+        explore.getStyleClass().add("nav-active");
         analysisNavigation.getChildren().add(explore);
-        String[] analysisTitles={"Comparador","Neumáticos","Paradas en pits","Evolución de posiciones","Simulador"};
+        String[] analysisTitles={"Comparador","Neumáticos","Paradas en pits","Evolución de posiciones","Simulador","Historia de carrera"};
         for(int i=0;i<analysisTitles.length;i++){final int index=i+1;analysisNavigation.getChildren().add(nav(analysisTitles[i],()->{showContent(explorer);explorer.openTab(index);}));}
         String[] titles={"Pilotos","Escuderías","Mapa y circuitos","Gestión de resultados","Bingo","Arcade"};
         for(int i=0;i<titles.length;i++){
@@ -111,6 +113,7 @@ public class MainViewController extends BorderPane {
 
     private Button nav(String text,Runnable action){Button button=new Button(text);button.getStyleClass().add("nav-item");button.setMaxWidth(Double.MAX_VALUE);button.setOnAction(e->{for(var node:analysisNavigation.getChildren())node.getStyleClass().remove("nav-active");for(var node:legacyNavigation.getChildren())node.getStyleClass().remove("nav-active");button.getStyleClass().add("nav-active");action.run();});return button;}
     private void showContent(javafx.scene.Node content){miniGameView.onTabUnselected();contentHost.getChildren().setAll(content);FadeTransition fade=new FadeTransition(Duration.millis(160),content);fade.setFromValue(0.6);fade.setToValue(1);fade.play();}
+    @Override public void dispose(){miniGameView.onTabUnselected();bingoView.dispose();if(explorer!=null)explorer.dispose();}
 
     private void importApiData() {
         try {

@@ -15,16 +15,19 @@ import model.db.DatabaseConnection;
 import model.history.RaceData;
 
 public final class HistoricalExplorerSmoke {
-    static Stage stage;static Object explorer;static int retries;
+    static Stage stage;static Object explorer;static int retries;static boolean gallery;
+    static final java.nio.file.Path EVIDENCE=java.nio.file.Path.of("private/verification/gallery-"+UUID.randomUUID());
     public static void main(String[] args){
+        gallery=Arrays.asList(args).contains("--gallery");
         Thread timeout=new Thread(()->{try{Thread.sleep(45000);System.err.println("HISTORY_UI_TIMEOUT");System.exit(1);}catch(InterruptedException ignored){}},"history-watchdog");timeout.setDaemon(true);timeout.start();
         Platform.startup(()->{try{stage=new Stage();new Main().start(stage);later(1000,()->{
             Parent login=stage.getScene().getRoot();String user,password;
             try(Connection c=DatabaseConnection.getConnection();PreparedStatement p=c.prepareStatement("SELECT username,password FROM app_users ORDER BY id_user LIMIT 1");ResultSet r=p.executeQuery()){require(r.next());user=r.getString(1);password=r.getString(2);}
             ((TextField)field(login,"usernameField")).setText(user);((PasswordField)field(login,"passwordField")).setText(password);((Button)field(login,"loginButton")).fire();
-            explorer=field(stage.getScene().getRoot(),"explorer");waitLoaded();
+            waitLogin();
         });}catch(Throwable e){fail(e);}});
     }
+    static void waitLogin(){later(250,()->{if(!stage.getScene().getRoot().getClass().getSimpleName().equals("MainViewController")){if(retries++>80)throw new AssertionError("Login did not finish");waitLogin();return;}explorer=field(stage.getScene().getRoot(),"explorer");waitLoaded();});}
     static void waitLoaded(){later(300,()->{if(((BooleanProperty)field(explorer,"busy")).get()||field(explorer,"data")==null){if(retries++>80)throw new AssertionError("No local data loaded");waitLoaded();return;}verify();});}
     static void verify()throws Exception{
         @SuppressWarnings("unchecked") ComboBox<RaceData.RaceInfo> races=(ComboBox<RaceData.RaceInfo>)field(explorer,"raceCombo");
@@ -44,8 +47,13 @@ public final class HistoricalExplorerSmoke {
         require(((ListView<?>)field(explorer,"sourcesList")).getItems().size()>=6);
         System.out.println("HISTORICAL_EXPLORER_UI_PASSED: 24 races, real 26-point winner, driver/team/search/session filters, empty state and source records");
         if(explorer.getClass().getSimpleName().equals("RaceLabController"))verifyAnalysis();
-        stage.close();Platform.exit();System.exit(0);
+        if(gallery){((Label)field(stage.getScene().getRoot(),"userLabel")).setText("Sesión de demostración");capture(0);}else finish();
     }
+    static void capture(int index)throws Exception{
+        TabPane tabs=(TabPane)field(explorer,"analysisTabs");if(index>=tabs.getTabs().size()){System.out.println("VISUAL_GALLERY="+EVIDENCE);finish();return;}tabs.getSelectionModel().select(index);
+        later(400,()->{stage.getScene().getRoot().applyCss();stage.getScene().getRoot().layout();var image=stage.getScene().snapshot(null);var png=new java.awt.image.BufferedImage((int)image.getWidth(),(int)image.getHeight(),java.awt.image.BufferedImage.TYPE_INT_ARGB);for(int y=0;y<png.getHeight();y++)for(int x=0;x<png.getWidth();x++)png.setRGB(x,y,image.getPixelReader().getArgb(x,y));java.nio.file.Files.createDirectories(EVIDENCE);javax.imageio.ImageIO.write(png,"png",EVIDENCE.resolve("tab-"+index+".png").toFile());capture(index+1);});
+    }
+    static void finish(){stage.close();Platform.exit();System.exit(0);}
     static void verifyAnalysis()throws Exception{
         Object comparison=field(explorer,"comparison"),tyres=field(explorer,"tyres"),pits=field(explorer,"pits"),positions=field(explorer,"positions"),simulation=field(explorer,"simulation");
         require(((TableView<?>)field(comparison,"metrics")).getItems().size()==8);
@@ -61,6 +69,7 @@ public final class HistoricalExplorerSmoke {
         TextField stops=(TextField)field(simulation,"stops"),degradation=(TextField)field(simulation,"degradation");
         String original=stops.getText();degradation.setText("0.08");stops.setText(original.replaceFirst("17:","14:"));calculate.fire();require(((Label)field(simulation,"resultLabel")).getText().startsWith("ESTIMADO"));
         require(((javafx.scene.chart.LineChart<?,?>)field(simulation,"deltaChart")).getData().size()==2);
+        require(!((ListView<?>)field(explorer,"narrative")).getItems().isEmpty());
         stops.setText("14:HARD;14:SOFT");calculate.fire();require(((Label)field(simulation,"resultLabel")).getText().startsWith("Escenario no calculado"));stops.setText(original);calculate.fire();require(((Label)field(simulation,"resultLabel")).getText().startsWith("ESTIMADO"));
         System.out.println("ANALYTICAL_UI_PASSED: driver/team comparison, two tyre timelines, pits, reversed position axis, pilot visibility, simulator controls and invalid-input handling");
     }

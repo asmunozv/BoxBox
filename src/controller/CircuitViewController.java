@@ -144,7 +144,7 @@ public class CircuitViewController extends BorderPane {
             Parent root = loader.load();
             CircuitDetailsViewController detailsController = loader.getController();
             detailsController.setData(circuit, season, racesThisSeason);
-            stage.setScene(new Scene(root, 560, 260));
+            stage.setScene(view.SceneTheme.apply(new Scene(root, 560, 260)));
             stage.showAndWait();
         } catch (IOException exception) {
             showError("Circuit details", "Could not load circuit detail view.");

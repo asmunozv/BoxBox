@@ -11,7 +11,18 @@ public final class HistoryAnalysis {
     public record Stats(double points,int wins,int podiums,int entries,int races,Double grid,Double finish,Double qualifying,int qualifyingSamples){}
     public record Pace(Double median,int samples){}
     public record Progress(int round,double points,Integer finish){}
+    public record RaceComparison(String race,Integer gridA,Integer finishA,Double pointsA,Integer gridB,Integer finishB,Double pointsB){}
+    public List<RaceComparison> raceComparison(List<RaceData> season,String a,String b,boolean team){
+        List<RaceComparison> rows=new ArrayList<>();for(RaceData d:season.stream().sorted(Comparator.comparingInt(x->x.race().round())).toList()){
+            var x=d.entries().stream().filter(matches(a,team)).toList();var y=d.entries().stream().filter(matches(b,team)).toList();
+            rows.add(new RaceComparison("R"+d.race().round()+" · "+d.race().name(),best(x,true),best(x,false),x.isEmpty()?null:x.stream().mapToDouble(Entry::points).sum(),best(y,true),best(y,false),y.isEmpty()?null:y.stream().mapToDouble(Entry::points).sum()));
+        }return rows;
+    }
+    private Integer best(List<Entry> entries,boolean grid){return entries.stream().filter(Entry::race).map(e->grid?e.grid():e.position()).filter(n->n!=null&&n>0).min(Integer::compareTo).orElse(null);}
+    public Pace teamPace(RaceData data,String team){List<Double> times=new ArrayList<>();for(Entry e:data.raceEntries())if(e.teamId().equals(team))times.addAll(cleanLaps(data,e.driverId()).stream().map(Lap::seconds).toList());return new Pace(median(times),times.size());}
     public record Estimates(double degradation,double pitLoss,Map<String,Double> effects,String evidence){}
+    public record ModelError(Double meanAbsolute,int samples){}
+    public ModelError modelError(RaceData data,String driver,List<Double> estimated){double sum=0;int samples=0;for(Lap lap:cleanLaps(data,driver))if(lap.number()<=estimated.size()){sum+=Math.abs(lap.seconds()-estimated.get(lap.number()-1));samples++;}return new ModelError(samples==0?null:sum/samples,samples);}
     public Estimates estimates(RaceData data,String driver){
         List<Lap> clean=cleanLaps(data,driver);Map<String,Double> medians=new HashMap<>();
         for(String compound:List.of("SOFT","MEDIUM","HARD")){

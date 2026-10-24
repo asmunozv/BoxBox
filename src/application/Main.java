@@ -30,14 +30,17 @@ public class Main extends Application {
     }
 
     private void showLogin() {
+        if(scene.getRoot() instanceof view.DisposableView disposable)disposable.dispose();
         scene.setRoot(new LoginViewController(this::showMain));
     }
 
     private void showMain() {
+        if(scene.getRoot() instanceof view.DisposableView disposable)disposable.dispose();
         scene.setRoot(new MainViewController(this::showLogin));
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+    @Override public void stop(){if(scene!=null&&scene.getRoot() instanceof view.DisposableView disposable)disposable.dispose();}
 }

@@ -14,8 +14,8 @@
    <VBox><Label text="Efecto MEDIUM s" styleClass="stat-caption"/><TextField fx:id="mediumEffect" prefWidth="85"/></VBox>
    <VBox><Label text="Efecto HARD s" styleClass="stat-caption"/><TextField fx:id="hardEffect" prefWidth="85"/></VBox>
   </FlowPane>
-  <Label fx:id="evidence" wrapText="true" styleClass="muted"/>
+  <TitledPane text="Cómo se obtienen los parámetros iniciales" expanded="false"><content><Label fx:id="evidence" wrapText="true" styleClass="muted"/></content></TitledPane>
  </VBox></top>
- <center><LineChart fx:id="deltaChart" title="Diferencia acumulada entre escenarios estimados"><xAxis><NumberAxis label="Vuelta" forceZeroInRange="false"/></xAxis><yAxis><NumberAxis label="Δ segundos (alternativa − histórica modelada)"/></yAxis></LineChart></center>
- <bottom><VBox spacing="8"><Label fx:id="resultLabel" wrapText="true" styleClass="explanation-card"/><Label fx:id="limitations" wrapText="true" styleClass="muted"/></VBox></bottom>
+ <center><VBox spacing="8"><Label fx:id="resultLabel" wrapText="true" styleClass="explanation-card"/><LineChart fx:id="deltaChart" title="Alternativa − histórica modelada" minHeight="240" VBox.vgrow="ALWAYS"><xAxis><NumberAxis label="Vuelta" forceZeroInRange="false"/></xAxis><yAxis><NumberAxis label="Δ tiempo (s)"/></yAxis></LineChart></VBox></center>
+ <bottom><TitledPane text="Supuestos, legalidad y límites del experimento" expanded="false"><content><Label fx:id="limitations" wrapText="true" styleClass="muted"/></content></TitledPane></bottom>
 </fx:root>

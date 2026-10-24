@@ -210,15 +210,15 @@ public class ResultDAO {
 
     public List<DriverStandingRow> findDriverStandingsBySeason(int season) {
         ensureSchema();
-        String sql = "SELECT d.given_name, d.family_name, c.name AS constructor_name, "
+        String sql = "SELECT d.given_name, d.family_name, GROUP_CONCAT(DISTINCT c.name ORDER BY c.name SEPARATOR ' / ') AS constructor_name, "
             + "SUM(r.points) AS total_points, "
-            + "SUM(CASE WHEN r.finishing_position = 1 THEN 1 ELSE 0 END) AS wins "
+            + "SUM(CASE WHEN r.session_type='RACE' AND r.finishing_position = 1 THEN 1 ELSE 0 END) AS wins "
             + "FROM results r "
             + "INNER JOIN races ra ON ra.id_race = r.id_race "
             + "INNER JOIN drivers d ON d.id_driver = r.id_driver "
             + "INNER JOIN constructors c ON c.id_constructor = r.id_constructor "
             + "WHERE ra.season = ? "
-            + "GROUP BY r.id_driver, d.given_name, d.family_name, c.name "
+            + "GROUP BY r.id_driver, d.given_name, d.family_name "
             + "ORDER BY total_points DESC, wins DESC, d.family_name ASC";
 
         List<DriverStandingRow> rows = new ArrayList<>();
@@ -247,7 +247,7 @@ public class ResultDAO {
         ensureSchema();
         String sql = "SELECT c.name AS constructor_name, "
             + "SUM(r.points) AS total_points, "
-            + "SUM(CASE WHEN r.finishing_position = 1 THEN 1 ELSE 0 END) AS wins "
+            + "SUM(CASE WHEN r.session_type='RACE' AND r.finishing_position = 1 THEN 1 ELSE 0 END) AS wins "
             + "FROM results r "
             + "INNER JOIN races ra ON ra.id_race = r.id_race "
             + "INNER JOIN constructors c ON c.id_constructor = r.id_constructor "

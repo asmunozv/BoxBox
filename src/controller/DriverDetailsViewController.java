@@ -72,8 +72,8 @@ public class DriverDetailsViewController {
 
     public void setData(Driver driver, DriverSeasonStats stats, int season, String teamName, Integer debutSeason) {
         DriverProfile profile = getDriverProfile(driver.getErgastDriverId());
-        String resolvedTeam = profile.teamName == null ? teamName : profile.teamName;
-        Integer resolvedDebut = profile.debutYear == null ? debutSeason : profile.debutYear;
+        String resolvedTeam = teamName;
+        Integer resolvedDebut = debutSeason;
         String resolvedQuote = profile.quote == null ? getDefaultQuote() : profile.quote;
 
         avatarImage.setImage(new Image(
@@ -91,9 +91,9 @@ public class DriverDetailsViewController {
         dobLabel.setText("Date of birth: " + (driver.getDateOfBirth() == null ? "-" : driver.getDateOfBirth()));
         ergastIdLabel.setText("Ergast ID: " + driver.getErgastDriverId());
         audioPathLabel.setText("Audio path: " + (driver.getAudioFilePath() == null ? "-" : driver.getAudioFilePath()));
-        teamLabel.setText("Current team: " + (resolvedTeam == null || resolvedTeam.isBlank() ? "-" : resolvedTeam));
-        debutLabel.setText("F1 debut season: " + (resolvedDebut == null ? "-" : resolvedDebut));
-        quoteLabel.setText("Iconic quote: " + resolvedQuote);
+        teamLabel.setText("Equipo según archivo local: " + (resolvedTeam == null || resolvedTeam.isBlank() ? "Sin asignación verificada" : resolvedTeam));
+        debutLabel.setText("Primera temporada disponible en el archivo: " + (resolvedDebut == null ? "-" : resolvedDebut));
+        quoteLabel.setText("Frase del material heredado (sin verificación): " + resolvedQuote);
         seasonLabel.setText("Season: " + season);
         pointsLabel.setText("Championship points: " + (stats.getPoints() == null ? "0" : stats.getPoints()));
         racesLabel.setText("Races: " + stats.getRaces());

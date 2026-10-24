@@ -268,7 +268,7 @@ public class RaceViewController extends BorderPane implements SeasonAwareView {
             Parent root = loader.load();
             RaceDetailsViewController detailsController = loader.getController();
             detailsController.setData(race, totalEntries, winsInRace);
-            stage.setScene(new Scene(root, 520, 250));
+            stage.setScene(view.SceneTheme.apply(new Scene(root, 520, 250)));
             stage.showAndWait();
         } catch (IOException exception) {
             showError("Race details", "Could not load race detail view.");

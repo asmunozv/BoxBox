@@ -128,12 +128,13 @@ public final class DatabaseIsolationCheck {
         String username="BOXBOX_TEST_"+UUID.randomUUID().toString().replace("-","");
         byte[] random=new byte[24];new SecureRandom().nextBytes(random);
         String temporaryPassword=Base64.getUrlEncoder().withoutPadding().encodeToString(random);
-        Path accountFile=Path.of("private/verification/account-test.properties");
+        Path accountFile=Path.of("private/verification/account-test-"+username.substring("BOXBOX_TEST_".length())+".properties");
         Files.createDirectories(accountFile.getParent());
         Properties owned=new Properties();owned.setProperty("username",username);
         try(var out=Files.newOutputStream(accountFile,StandardOpenOption.CREATE_NEW)){owned.store(out,"Owned transient fixture; no password recorded");}
         AuthController auth=new AuthController();
         require(auth.register(username,temporaryPassword));
+        require(new model.security.PasswordHasher().encoded(new UserAccountDAO().findByUsername(username).orElseThrow().getPassword()));
         require(UserSession.getCurrentUserId()!=null);
         int userId=UserSession.getCurrentUserId();
         UserSession.logout();require(auth.authenticate(username,temporaryPassword));
@@ -147,6 +148,7 @@ public final class DatabaseIsolationCheck {
         UserSession.logout();
         System.out.println("PASS: registration, persisted login/rejection and bingo insert/update/read on an owned temporary account");
         System.out.println("NOTE: owned temporary account must now be removed by the administrative verifier before final equality check");
+        System.out.println("OWNED_FIXTURE_MANIFEST="+accountFile);
     }
 
     static void require(boolean condition) { if(!condition)throw new AssertionError("Verification failed"); }

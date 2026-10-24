@@ -598,7 +598,7 @@ public class ResultViewController extends BorderPane implements SeasonAwareView 
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Drivers Championship - " + currentSeason);
-        stage.setScene(new Scene(new BorderPane(table), 760, 520));
+        stage.setScene(view.SceneTheme.apply(new Scene(new BorderPane(table), 760, 520)));
         stage.showAndWait();
     }
 
@@ -621,7 +621,7 @@ public class ResultViewController extends BorderPane implements SeasonAwareView 
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Constructors Championship - " + currentSeason);
-        stage.setScene(new Scene(new BorderPane(table), 640, 520));
+        stage.setScene(view.SceneTheme.apply(new Scene(new BorderPane(table), 640, 520)));
         stage.showAndWait();
     }
 

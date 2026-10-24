@@ -2,6 +2,6 @@
 <?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.scene.chart.*?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
  <top><VBox spacing="10"><Label text="Head to head · temporada preparada" styleClass="section-title"/><FlowPane hgap="10" vgap="8"><ComboBox fx:id="mode" prefWidth="140"/><ComboBox fx:id="left" prefWidth="230"/><ComboBox fx:id="right" prefWidth="230"/></FlowPane><Label fx:id="paceLabel" wrapText="true" styleClass="coverage-label"/></VBox></top>
- <center><SplitPane orientation="VERTICAL" dividerPositions="0.45"><TableView fx:id="metrics"/><LineChart fx:id="pointsChart" animated="false" title="Evolución de puntos oficiales acumulados"><xAxis><NumberAxis label="Ronda" forceZeroInRange="false" tickUnit="1"/></xAxis><yAxis><NumberAxis label="Puntos"/></yAxis></LineChart></SplitPane></center>
+ <center><SplitPane orientation="VERTICAL" dividerPositions="0.3,0.68"><TableView fx:id="metrics"/><LineChart fx:id="pointsChart" animated="false" title="Evolución de puntos oficiales acumulados"><xAxis><NumberAxis label="Ronda" forceZeroInRange="false" tickUnit="1"/></xAxis><yAxis><NumberAxis label="Puntos"/></yAxis></LineChart><TableView fx:id="racesTable"/></SplitPane></center>
  <bottom><Label fx:id="explanation" wrapText="true" styleClass="explanation-card"/></bottom>
 </fx:root>

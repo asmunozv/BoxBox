@@ -14,19 +14,20 @@ import model.history.*;
 import static model.history.RaceData.*;
 
 /** JavaFX interaction only; all source access, persistence and calculations live in model. */
-public class HistoricalExplorerController extends BorderPane {
+public class HistoricalExplorerController extends BorderPane implements view.DisposableView {
     final HistoryService service=new HistoryService();
     final HistoryImportService importer=new HistoryImportService();
     List<RaceInfo> calendar=List.of();
     List<RaceData> seasonData=List.of();
     RaceData data;
     private boolean selecting;
+    private Task<?> activeTask;
     final BooleanProperty busy=new SimpleBooleanProperty(false);
     @FXML ComboBox<Integer> seasonCombo;
     @FXML ComboBox<RaceInfo> raceCombo;
     @FXML ComboBox<String> driverFilter,teamFilter,sessionFilter;
     @FXML TextField searchField;
-    @FXML Button seasonImportButton,raceImportButton;
+    @FXML Button seasonImportButton,raceImportButton,demoButton;
     @FXML ProgressIndicator loading;
     @FXML Label statusLabel,titleLabel,circuitLabel,coverageLabel,winnerValue,entriesValue,lapsValue,qualifyingValue,summaryLabel;
     @FXML TableView<Entry> resultsTable;
@@ -39,7 +40,7 @@ public class HistoricalExplorerController extends BorderPane {
     }
     @FXML private void initialize(){
         loading.visibleProperty().bind(busy);loading.managedProperty().bind(busy);
-        for(Control c:List.of(seasonCombo,raceCombo,seasonImportButton,raceImportButton))c.disableProperty().bind(busy);
+        for(Control c:List.of(seasonCombo,raceCombo,seasonImportButton,raceImportButton,demoButton))c.disableProperty().bind(busy);
         for(int year=LocalDate.now().getYear();year>=1950;year--)seasonCombo.getItems().add(year);
         sessionFilter.getItems().setAll("Carrera","Sprint");sessionFilter.setValue("Carrera");
         driverFilter.getItems().setAll("Todos los pilotos");driverFilter.setValue("Todos los pilotos");
@@ -57,6 +58,7 @@ public class HistoricalExplorerController extends BorderPane {
         searchField.textProperty().addListener((o,a,b)->filter());
         seasonCombo.setOnAction(e->{if(!selecting)selectSeason();});raceCombo.setOnAction(e->{if(!busy.get()&&!selecting)loadRace();});
         seasonImportButton.setOnAction(e->prepareSeason());raceImportButton.setOnAction(e->prepareRace());
+        demoButton.setOnAction(e->job("Cargando demostración local, sin HTTP…",()->new DemoArchive().importFile(java.nio.file.Path.of("datasets/demo-2024.json")),count->{service.invalidate();selecting=true;seasonCombo.setValue(2024);raceCombo.setValue(null);selecting=false;refresh();}));
         refresh();
     }
     void column(String title,Function<Entry,String> value,double width){TableColumn<Entry,String> c=new TableColumn<>(title);c.setPrefWidth(width);c.setCellValueFactory(x->new SimpleStringProperty(value.apply(x.getValue())));resultsTable.getColumns().add(c);}
@@ -93,6 +95,7 @@ public class HistoricalExplorerController extends BorderPane {
     private void importJob(String message,Importer operation){
         if(busy.get())return;RaceInfo selected=raceCombo.getValue();
         Task<HistoryImportService.Report> task=new Task<>(){protected HistoryImportService.Report call()throws Exception{return operation.run(this::updateMessage);}};
+        activeTask=task;
         busy.set(true);statusLabel.textProperty().bind(task.messageProperty());
         task.setOnSucceeded(e->{statusLabel.textProperty().unbind();busy.set(false);statusLabel.setText(task.getValue().message());service.invalidate();job("Actualizando archivo local…",()->service.races(),rows->{calendar=rows;selectSeason();});});
         task.setOnFailed(e->{statusLabel.textProperty().unbind();busy.set(false);statusLabel.setText("No se completó la preparación: "+safe(task.getException()));});
@@ -101,9 +104,11 @@ public class HistoricalExplorerController extends BorderPane {
     @FunctionalInterface private interface Importer{HistoryImportService.Report run(Consumer<String> progress)throws Exception;}
     <T> void job(String message,Work<T> work,Consumer<T> success){
         if(busy.get())return;busy.set(true);statusLabel.setText(message);Task<T> task=new Task<>(){protected T call()throws Exception{return work.run();}};
+        activeTask=task;
         task.setOnSucceeded(e->{busy.set(false);statusLabel.setText("Datos locales cargados · observado / calculado / simulado se identifican por separado.");success.accept(task.getValue());});
         task.setOnFailed(e->{busy.set(false);statusLabel.setText("No se pudo completar la operación: "+safe(task.getException()));});Thread thread=new Thread(task,"boxbox-local-read");thread.setDaemon(true);thread.start();
     }
     @FunctionalInterface interface Work<T>{T run()throws Exception;}
     private String safe(Throwable e){if(e instanceof java.sql.SQLException)return "verifica la conexión y la preparación del esquema de BoxBox.";return Timing.or(e.getMessage(),e.getClass().getSimpleName());}
+    @Override public void dispose(){if(activeTask!=null&&activeTask.isRunning())activeTask.cancel(true);}
 }

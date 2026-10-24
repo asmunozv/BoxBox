@@ -13,6 +13,9 @@ public final class HistoricalApiClient {
     public static final String JOLPICA="https://api.jolpi.ca/ergast/f1/";
     public static final String OPENF1="https://api.openf1.org/v1/";
     private final HttpClient http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).followRedirects(HttpClient.Redirect.NORMAL).build();
+    private final String jolpicaBase,openBase;
+    public HistoricalApiClient(){this(JOLPICA,OPENF1);}
+    public HistoricalApiClient(String jolpicaBase,String openBase){this.jolpicaBase=jolpicaBase;this.openBase=openBase;}
     private static long lastJolpica,lastOpen;
     private static synchronized void pace(boolean open)throws InterruptedException{
         long min=open?2100:300,last=open?lastOpen:lastJolpica;
@@ -24,7 +27,7 @@ public final class HistoricalApiClient {
     public Fetch jolpica(String route,String field)throws IOException,InterruptedException{
         JsonArray pages=new JsonArray();int offset=0,total=-1,seen=0;
         do {
-            String url=JOLPICA+route+(route.contains("?")?"&":"?")+"limit=100&offset="+offset;
+            String url=jolpicaBase+route+(route.contains("?")?"&":"?")+"limit=100&offset="+offset;
             JsonObject page=get(url,false).getAsJsonObject();JsonObject meta=object(page,"MRData");
             Integer returnedTotal=integer(meta,"total"),limit=integer(meta,"limit"),returnedOffset=integer(meta,"offset");
             if(returnedTotal==null||limit==null||limit<1||returnedOffset==null||returnedOffset!=offset)throw new IOException("Respuesta paginada inválida de Jolpica.");
@@ -40,9 +43,9 @@ public final class HistoricalApiClient {
             if(pages.size()>1000)throw new IOException("Paginación fuera del límite de protección.");
         }while(offset<total);
         if(seen!=total)throw new IOException("Se recibieron "+seen+" registros de "+total+". No se guardó una importación incompleta.");
-        return new Fetch(JOLPICA+route,pages,Instant.now());
+        return new Fetch(jolpicaBase+route,pages,Instant.now());
     }
-    public JsonArray open(String route)throws IOException,InterruptedException{return get(OPENF1+route,true).getAsJsonArray();}
+    public JsonArray open(String route)throws IOException,InterruptedException{return get(openBase+route,true).getAsJsonArray();}
     private JsonElement get(String url,boolean open)throws IOException,InterruptedException{
         for(int attempt=0;attempt<3;attempt++){
             pace(open);

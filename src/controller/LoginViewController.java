@@ -17,12 +17,16 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import view.AppAudio;
+import view.DisposableView;
+import javafx.concurrent.Task;
 
-public class LoginViewController extends BorderPane {
+public class LoginViewController extends BorderPane implements DisposableView {
 
-    private final AuthController authController;
+    private AuthController authController;
     private final Runnable onLoginSuccess;
     private MediaPlayer loginMusic;
+    private MediaPlayer backgroundPlayer;
+    private Task<Boolean> activeTask;
 
     @FXML
     private StackPane centerLayer;
@@ -46,7 +50,6 @@ public class LoginViewController extends BorderPane {
     private Label statusLabel;
 
     public LoginViewController(Runnable onLoginSuccess) {
-        this.authController = new AuthController();
         this.onLoginSuccess = onLoginSuccess;
         loadFxml();
     }
@@ -72,29 +75,8 @@ public class LoginViewController extends BorderPane {
         );
         loginButton.setDefaultButton(true);
 
-        Runnable loginAction = () -> {
-            boolean authenticated = authController.authenticate(usernameField.getText(), passwordField.getText());
-            if (authenticated) {
-                statusLabel.setText("");
-                AppAudio.stop(loginMusic);
-                loginMusic = null;
-                onLoginSuccess.run();
-            } else {
-                statusLabel.setText("Invalid credentials. Try again.");
-            }
-        };
-
-        Runnable registerAction = () -> {
-            boolean created = authController.register(usernameField.getText(), passwordField.getText());
-            if (created) {
-                statusLabel.setText("");
-                AppAudio.stop(loginMusic);
-                loginMusic = null;
-                onLoginSuccess.run();
-            } else {
-                statusLabel.setText("Could not create account (username may exist). ");
-            }
-        };
+        Runnable loginAction = () -> authenticate(false);
+        Runnable registerAction = () -> authenticate(true);
 
         loginButton.setOnAction(event -> loginAction.run());
         registerButton.setOnAction(event -> registerAction.run());
@@ -128,6 +110,7 @@ public class LoginViewController extends BorderPane {
             try {
                 Media media = new Media(file.toURI().toString());
                 MediaPlayer player = new MediaPlayer(media);
+                backgroundPlayer = player;
                 player.setMute(true);
                 player.setCycleCount(MediaPlayer.INDEFINITE);
                 player.play();
@@ -139,4 +122,16 @@ public class LoginViewController extends BorderPane {
         }
         return null;
     }
+
+    private void authenticate(boolean register){
+        if(activeTask!=null&&activeTask.isRunning())return;
+        String username=usernameField.getText(),password=passwordField.getText();
+        loginButton.setDisable(true);registerButton.setDisable(true);statusLabel.setText(register?"Creando acceso protegido…":"Verificando acceso…");
+        activeTask=new Task<>(){protected Boolean call(){if(authController==null)authController=new AuthController();return register?authController.register(username,password):authController.authenticate(username,password);}};
+        activeTask.setOnSucceeded(e->{loginButton.setDisable(false);registerButton.setDisable(false);if(activeTask.getValue()){passwordField.clear();dispose();onLoginSuccess.run();}else statusLabel.setText(register?"Usuario no disponible. Usa hasta 80 caracteres y una contraseña de 8 a 1024 caracteres.":"Credenciales no válidas.");});
+        activeTask.setOnFailed(e->{loginButton.setDisable(false);registerButton.setDisable(false);statusLabel.setText("No se pudo verificar el acceso. Revisa MySQL y la configuración privada de BoxBox.");});
+        Thread thread=new Thread(activeTask,"boxbox-authentication");thread.setDaemon(true);thread.start();
+    }
+
+    @Override public void dispose(){AppAudio.stop(loginMusic);loginMusic=null;if(backgroundPlayer!=null){backgroundPlayer.stop();backgroundPlayer.dispose();backgroundPlayer=null;}if(activeTask!=null&&activeTask.isRunning())activeTask.cancel(true);}
 }

@@ -13,6 +13,7 @@
         <ComboBox fx:id="raceCombo" prefWidth="310" promptText="Gran Premio" accessibleText="Gran Premio"/>
         <Button fx:id="seasonImportButton" text="Preparar temporada" styleClass="secondary-button"/>
         <Button fx:id="raceImportButton" text="Preparar vueltas y estrategia" styleClass="danger-button"/>
+        <Button fx:id="demoButton" text="Demo sin internet"/>
         <ProgressIndicator fx:id="loading" prefWidth="24" prefHeight="24"/>
       </FlowPane>
       <Label fx:id="statusLabel" wrapText="true" styleClass="status-message"/>

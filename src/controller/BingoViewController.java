@@ -26,8 +26,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.dao.UserBingoDAO;
+import model.service.BingoService;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import javafx.scene.control.TextFormatter;
 
 public class BingoViewController extends BorderPane {
+    public void dispose(){for(PauseTransition delay:pendingSaves.values())delay.stop();for(int slot:new ArrayList<>(pendingSaves.keySet()))saveSlot(slot);pendingSaves.clear();stopConfetti();}
 
     @FXML
     private GridPane predictionGrid;
@@ -41,7 +46,8 @@ public class BingoViewController extends BorderPane {
     private final List<TextField> predictionFields;
     private final List<CheckBox> predictionChecks;
     private final Random random;
-    private final UserBingoDAO userBingoDAO;
+    private final BingoService bingoService;
+    private final java.util.Map<Integer,PauseTransition> pendingSaves=new java.util.HashMap<>();
     private AnimationTimer confettiTimer;
     private Canvas confettiCanvas;
     private final List<Particle> particles;
@@ -51,7 +57,7 @@ public class BingoViewController extends BorderPane {
         this.predictionFields = new ArrayList<>();
         this.predictionChecks = new ArrayList<>();
         this.random = new Random();
-        this.userBingoDAO = new UserBingoDAO();
+        this.bingoService = new BingoService();
         this.particles = new ArrayList<>();
         this.loadingState = false;
         loadFxml();
@@ -108,17 +114,18 @@ public class BingoViewController extends BorderPane {
             title.setStyle("-fx-font-weight: bold; -fx-text-fill: white;");
 
             TextField textField = new TextField();
+            textField.setTextFormatter(new TextFormatter<String>(change->change.getControlNewText().length()<=255?change:null));
             textField.setPromptText("Write your prediction...");
             textField.textProperty().addListener((obs, oldValue, newValue) -> {
                 updateProgress();
-                saveSlot(predictionNumber - 1);
+                scheduleSlot(predictionNumber - 1);
             });
 
             CheckBox checkBox = new CheckBox("Completed");
             checkBox.setStyle("-fx-text-fill: white;");
             checkBox.selectedProperty().addListener((obs, oldValue, newValue) -> {
                 updateProgress();
-                saveSlot(predictionNumber - 1);
+                scheduleSlot(predictionNumber - 1);
             });
 
             VBox card = new VBox(8, title, textField, checkBox);
@@ -298,7 +305,7 @@ public class BingoViewController extends BorderPane {
 
         loadingState = true;
         try {
-            List<UserBingoDAO.BingoEntry> entries = userBingoDAO.loadByUser(userId);
+            List<UserBingoDAO.BingoEntry> entries = bingoService.load(userId);
             for (UserBingoDAO.BingoEntry entry : entries) {
                 int idx = entry.getSlotIndex();
                 if (idx < 0 || idx >= predictionFields.size()) {
@@ -326,8 +333,9 @@ public class BingoViewController extends BorderPane {
 
         String prediction = predictionFields.get(index).getText();
         boolean completed = predictionChecks.get(index).isSelected();
-        userBingoDAO.upsert(userId, index, prediction, completed);
+        try{bingoService.save(userId,index,prediction,completed);}catch(RuntimeException e){progressLabel.setText("No se guardó la predicción. Revisa la conexión y vuelve a editarla.");}
     }
+    private void scheduleSlot(int index){if(loadingState)return;PauseTransition previous=pendingSaves.remove(index);if(previous!=null)previous.stop();PauseTransition delay=new PauseTransition(Duration.millis(450));pendingSaves.put(index,delay);delay.setOnFinished(e->{pendingSaves.remove(index);saveSlot(index);});delay.play();}
 
     private static class Particle {
         private double x;

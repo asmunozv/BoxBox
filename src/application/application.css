@@ -237,3 +237,7 @@
 .axis { -fx-tick-label-fill: #b6c9e3; }
 .axis-label, .chart-title { -fx-text-fill: #dce8f9; }
 .scroll-pane, .scroll-pane > .viewport { -fx-background-color: #0a0f19; }
+.text-input { -fx-prompt-text-fill: #8fabc9; }
+.combo-box > .list-cell { -fx-background-color: transparent; -fx-text-fill: #e1e9f6; }
+.titled-pane > .title { -fx-background-color: #18253a; -fx-padding: 8; }
+.titled-pane > .content { -fx-background-color: #101a2b; -fx-border-color: #293851; -fx-padding: 10; }

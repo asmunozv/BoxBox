@@ -150,7 +150,7 @@ public class ConstructorViewController extends BorderPane {
             Parent root = loader.load();
             ConstructorDetailsViewController detailsController = loader.getController();
             detailsController.setData(constructorEntity, stats, season);
-            stage.setScene(new Scene(root, 500, 220));
+            stage.setScene(view.SceneTheme.apply(new Scene(root, 500, 220)));
             stage.showAndWait();
         } catch (IOException exception) {
             showError("Constructor profile", "Could not load constructor detail view.");

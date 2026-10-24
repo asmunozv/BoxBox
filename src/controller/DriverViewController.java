@@ -223,7 +223,7 @@ public class DriverViewController extends BorderPane {
             Parent root = loader.load();
             DriverDetailsViewController detailsController = loader.getController();
             detailsController.setData(driver, stats, season, teamName, debutSeason);
-            stage.setScene(new Scene(root, 560, 280));
+            stage.setScene(view.SceneTheme.apply(new Scene(root, 560, 280)));
             stage.showAndWait();
         } catch (IOException exception) {
             showError("Driver profile", "Could not load driver detail view.");

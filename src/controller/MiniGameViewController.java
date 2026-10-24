@@ -242,6 +242,7 @@ public class MiniGameViewController extends BorderPane {
     }
 
     public void onTabSelected() {
+        if(timer!=null&&running)timer.start();
         if (gameMusic == null) {
             gameMusic = AppAudio.playLoop(
                 "assets/audio/game/game.mp3",
@@ -253,6 +254,7 @@ public class MiniGameViewController extends BorderPane {
     }
 
     public void onTabUnselected() {
+        if(timer!=null)timer.stop();
         AppAudio.stop(gameMusic);
         gameMusic = null;
     }

@@ -33,9 +33,38 @@ Los archivos del proyecto original se comprobaron sin cambios.
 
 ## Continuación de esta sesión
 
-En desarrollo a continuación: comparador, neumáticos/pits, posiciones, simulador,
-explicaciones, autenticación con hashes y pruebas de regresión. No declarar esas
-entregas terminadas hasta ejecutar sus verificaciones correspondientes.
+Entregas implementadas y verificadas en esta sesión:
+
+- Comparador piloto/escudería, métricas, curva de puntos y tabla por GP.
+- Líneas de stints, muestras de ritmo y pendiente observada.
+- Pits con duraciones separadas y detector heurístico de posibles undercut/overcut.
+- Posiciones P1 arriba, visibilidad por piloto y puntos/pits interactivos.
+- Simulador por vuelta, paradas, compuestos, edades, sensibilidad y validación.
+- Explicaciones de comparación, stints, pits y narrativa de carrera con evidencia.
+- Demo exportada y validada localmente sin HTTP.
+- PBKDF2 y autenticación de fondo; transición aditiva sin sobrescribir contraseñas antiguas.
+- Ciclo de vida para medios/animaciones, tema compartido y menú lateral desplazable.
+
+Pruebas ejecutadas: 36 aserciones de cálculo/modelo y contraste real; seguridad
+criptográfica; servidor HTTP de prueba con paginación completa/incompleta; rollback
+de persistencia por FK inválida; importación demo idempotente; prueba JavaFX del
+explorador y módulos analíticos; regresión de las seis funciones anteriores,
+audio/video PLAYING y CRUD/registro/bingo con fixtures transitorios limpiados.
+
+La comprobación de conservación usó el respaldo **de inicio de esta tarea**, no
+reimpuso la copia original de independencia: los catálogos manuales de BoxBox
+contenían cambios previos de uso que se conservaron. Las ocho tablas heredadas
+coincidieron en definiciones e INSERT con ese respaldo después de limpiar pruebas.
+También se comprobaron sin cambios los 280 archivos y la instantánea de la base original.
+
+Pendientes reales de validación externa: pruebas con aficionados, ensayo presencial,
+validación predictiva independiente del modelo y verificación de permisos individuales
+de los medios heredados. La app no estima posiciones finales contrafactuales, ni
+reconstruye compuestos/tiempos estacionarios donde la fuente no los ofrece.
+
+La ejecución actual usa JDK 26 con JavaFX 21.0.11. Persisten advertencias de APIs
+obsoletas/genéricos heredados y de Unsafe del renderizador; no impidieron las pruebas.
+No se actualizó la tecnología ni se silenciaron errores para declarar éxito.
 
 Las tablas nuevas se prepararon con la migración aditiva
 `database/migrations/V001__historical_archive.sql`, y permisos SELECT/INSERT

@@ -204,9 +204,9 @@ public class DriverDAO {
     }
 
     public DriverSeasonStats findSeasonStats(int idDriver, int season) {
-        String sql = "SELECT COUNT(*) AS races, "
-            + "COALESCE(SUM(CASE WHEN r.finishing_position = 1 THEN 1 ELSE 0 END), 0) AS wins, "
-            + "COALESCE(SUM(CASE WHEN r.finishing_position <= 3 THEN 1 ELSE 0 END), 0) AS podiums, "
+        String sql = "SELECT COUNT(DISTINCT CASE WHEN r.session_type='RACE' THEN r.id_race END) AS races, "
+            + "COALESCE(SUM(CASE WHEN r.session_type='RACE' AND r.finishing_position = 1 THEN 1 ELSE 0 END), 0) AS wins, "
+            + "COALESCE(SUM(CASE WHEN r.session_type='RACE' AND r.finishing_position <= 3 THEN 1 ELSE 0 END), 0) AS podiums, "
             + "COALESCE(SUM(r.points), 0) AS points "
             + "FROM results r INNER JOIN races ra ON ra.id_race = r.id_race "
             + "WHERE r.id_driver = ? AND ra.season = ?";

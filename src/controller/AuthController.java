@@ -1,48 +1,13 @@
 package controller;
 
-import model.dao.UserAccountDAO;
+import model.service.AuthenticationService;
 
+/** Bridges reusable authentication to the desktop session. */
 public class AuthController {
-
-    private final UserAccountDAO userAccountDAO;
-
-    public AuthController() {
-        this.userAccountDAO = new UserAccountDAO();
+    private final AuthenticationService service=new AuthenticationService();
+    public boolean authenticate(String username,String password){return login(service.authenticate(username,password));}
+    public boolean register(String username,String password){return login(service.register(username,password));}
+    private boolean login(java.util.Optional<AuthenticationService.User> user){
+        return user.map(u->{UserSession.login(u.id(),u.username());return true;}).orElse(false);
     }
-
-    public boolean authenticate(String username, String password) {
-        if (username == null || password == null) {
-            return false;
-        }
-
-        String normalized = username.trim();
-        if (normalized.isBlank() || password.isBlank()) {
-            return false;
-        }
-
-        return userAccountDAO.findByUsername(normalized)
-            .filter(user -> user.getPassword().equals(password))
-            .map(user -> {
-                UserSession.login(user.getIdUser(), user.getUsername());
-                return true;
-            })
-            .orElse(false);
-    }
-
-    public boolean register(String username, String password) {
-        if (username == null || password == null) {
-            return false;
-        }
-        String normalized = username.trim();
-        if (normalized.isBlank() || password.isBlank()) {
-            return false;
-        }
-        if (userAccountDAO.findByUsername(normalized).isPresent()) {
-            return false;
-        }
-        int id = userAccountDAO.createUser(normalized, password);
-        UserSession.login(id, normalized);
-        return true;
-    }
-
 }

@@ -59,17 +59,16 @@ public final class ApplicationSmoke {
         ((TextField)field(firstLogin,"usernameField")).setText(username);
         ((PasswordField)field(firstLogin,"passwordField")).setText(password);
         ((Button)field(firstLogin,"loginButton")).fire();
-        require(UserSession.getCurrentUserId()!=null);
-        require(stage.getScene().getRoot().getClass().getName().equals("controller.MainViewController"));
-        disposeMedia(firstLogin);
-        System.out.println("PASS: production login FXML, real database authentication and main-window transition");
-        later(1000,ApplicationSmoke::inspectMain);
+        waitLogin();
     }
+    private static void waitLogin(){later(250,()->{if(!stage.getScene().getRoot().getClass().getName().equals("controller.MainViewController")){waitLogin();return;}require(UserSession.getCurrentUserId()!=null);disposeMedia(firstLogin);System.out.println("PASS: production login FXML, real database authentication and main-window transition");later(1000,ApplicationSmoke::inspectMain);});}
 
     private static void inspectMain() throws Exception {
         Parent main=stage.getScene().getRoot();
         TabPane tabs=(TabPane)field(main,"tabPane");
         require(tabs.getTabs().size()==6);
+        ((Button)((javafx.scene.layout.VBox)field(main,"legacyNavigation")).getChildren().get(2)).fire();
+        stage.getScene().getRoot().applyCss();stage.getScene().getRoot().layout();
         Object drivers=tabs.getTabs().get(0).getContent();
         Object constructors=tabs.getTabs().get(1).getContent();
         Object races=tabs.getTabs().get(2).getContent();
