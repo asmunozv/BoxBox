@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?><?import javafx.scene.layout.*?><?import javafx.scene.chart.*?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1">
+ <top><VBox spacing="10"><Label text="Race story · posiciones observadas" styleClass="section-title"/><FlowPane fx:id="driverChoices" hgap="12" vgap="8"/></VBox></top>
+ <center><LineChart fx:id="positions" title="Evolución de posiciones · P1 arriba" createSymbols="true"><xAxis><NumberAxis label="Vuelta" forceZeroInRange="false" tickUnit="5"/></xAxis><yAxis><NumberAxis fx:id="positionAxis" label="Posición"/></yAxis></LineChart></center>
+ <bottom><Label fx:id="pointDetail" wrapText="true" styleClass="explanation-card"/></bottom>
+</fx:root>
